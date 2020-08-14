@@ -4,39 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_light"
+    android:background="@color/black"
     tools:ignore="ExtraText">
 
 
+    <!-- android:text="@{viewmodel.email}" -->
+
     <EditText
         android:id="@+id/edit_login_email"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="136dp"
-        android:layout_marginEnd="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="345dp"
+        android:
         android:autofillHints=""
-        android:background="@drawable/rounded_edittext_register_login"
-        android:ems="10"
+        android:background="@drawable/login_email"
         android:hint="@string/email_login"
-        android:paddingLeft="16dp"
         android:inputType="textEmailAddress"
+        android:paddingStart="82dp"
         android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/edit_login_password"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <!-- android:text="@{viewmodel.email}" -->
+
     <EditText
         android:id="@+id/edit_login_password"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:autofillHints=""
-        android:background="@drawable/rounded_edittext_register_login"
-        android:ems="10"
+        android:background="@drawable/login_password"
         android:hint="@string/password_registration"
-        android:paddingLeft="16dp"
         android:inputType="textPassword"
+        android:paddingStart="82dp"
         android:text=""
         app:layout_constraintEnd_toEndOf="@+id/edit_login_email"
         app:layout_constraintStart_toStartOf="@+id/edit_login_email"
