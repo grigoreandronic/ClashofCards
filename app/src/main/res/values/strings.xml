@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Battle of Card</string>
+    <string name="email_login">Email</string>
+    <string name="login_button_login">LOGIN</string>
+    <string name="password_registration">Password</string>
+    <string name="new_sign_up">New? Sign up</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="username">Username</string>
+    <string name="register">REGISTER</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="facebook_application_id">2142106609268508</string>
+    <string name="fb_login_protocol_scheme">fb2142106609268508</string>
+    <string name="alredy_in">already have an account?</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="select_date_button">Select</string>
+
+</resources>

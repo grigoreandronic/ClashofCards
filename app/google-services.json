@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "497481072404",
+    "firebase_url": "https://clashofcards-6eed8.firebaseio.com",
+    "project_id": "clashofcards-6eed8",
+    "storage_bucket": "clashofcards-6eed8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497481072404:android:814c0ae8aa46fc8f678c01",
+        "android_client_info": {
+          "package_name": "com.unitn.clashofcards"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "497481072404-rkja2195h5t0vsucm6bp3j2ilsvpggnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWpx8R6eye6KyFe0MpbSdVZxi-SwlFzbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "497481072404-rkja2195h5t0vsucm6bp3j2ilsvpggnv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
