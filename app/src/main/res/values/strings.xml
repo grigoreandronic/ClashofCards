@@ -3,11 +3,13 @@
     <string name="email_login">Email</string>
     <string name="login_button_login">LOGIN</string>
     <string name="password_registration">Password</string>
-    <string name="new_sign_up">New? Sign up</string>
+    <string name="new_sign_up">Don't have an account?</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="username">Username</string>
-    <string name="register">REGISTER</string>
+    <string name="register">Register</string>
+    <string name="register_button">REGISTER</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="facebook_application_id">2142106609268508</string>
