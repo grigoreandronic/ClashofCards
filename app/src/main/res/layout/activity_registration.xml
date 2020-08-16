@@ -11,7 +11,7 @@
 
     <EditText
         android:id="@+id/birth_date_edit"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
         android:autofillHints=""
@@ -20,8 +20,8 @@
         android:hint="@string/birth_date"
         android:inputType="textEmailAddress"
         android:paddingLeft="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/date_picker_button"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/register_surname"
         app:layout_constraintStart_toStartOf="@+id/register_surname"
         app:layout_constraintTop_toBottomOf="@+id/register_surname" />
 
@@ -36,8 +36,7 @@
         android:hint="@string/email_login"
         android:inputType="textEmailAddress"
         android:paddingLeft="16dp"
-        app:layout_constraintEnd_toEndOf="@+id/date_picker_button"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="@+id/birth_date_edit"
         app:layout_constraintStart_toStartOf="@+id/birth_date_edit"
         app:layout_constraintTop_toBottomOf="@+id/birth_date_edit" />
 
@@ -63,7 +62,7 @@
         android:id="@+id/register_surname"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:autofillHints=""
         android:background="@drawable/rounded_edittext_register_login"
         android:ems="10"
@@ -71,7 +70,7 @@
         android:inputType="textPersonName"
         android:paddingLeft="16dp"
         app:layout_constraintEnd_toEndOf="@+id/register_name"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/register_name"
         app:layout_constraintTop_toBottomOf="@+id/register_name" />
 
@@ -131,14 +130,4 @@
             app:layout_constraintStart_toStartOf="@+id/register_button_register"
             app:layout_constraintTop_toBottomOf="@+id/register_button_register" />
 
-    <Button
-        android:id="@+id/date_picker_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/select_date_button"
-        app:layout_constraintEnd_toEndOf="@+id/register_surname"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/birth_date_edit"
-        app:layout_constraintTop_toBottomOf="@+id/register_surname" />
 </androidx.constraintlayout.widget.ConstraintLayout>
