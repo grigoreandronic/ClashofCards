@@ -9,12 +9,13 @@
     <string name="surname">Surname</string>
     <string name="username">Username</string>
     <string name="register">Register</string>
+    <string name="login">Login</string>
     <string name="register_button">REGISTER</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="facebook_application_id">2142106609268508</string>
     <string name="fb_login_protocol_scheme">fb2142106609268508</string>
-    <string name="alredy_in">Already have an account?</string>
+    <string name="already_in">Already have an account?</string>
     <string name="birth_date">Birth Date</string>
     <string name="select_date_button">Select</string>
     <string name="todo">TODO</string>

@@ -83,8 +83,8 @@ class LoginActivity : AppCompatActivity() {
         // Create and launch sign-in intent
         val authUiLayout = AuthMethodPickerLayout
             .Builder(R.layout.activity_login)
-            .setFacebookButtonId(R.id.facebook_button_login)
-            .setGoogleButtonId(R.id.google_button_login)
+           // .setFacebookButtonId(R.id.facebook_button_login)
+            // .setGoogleButtonId(R.id.google_button_login)
             .setEmailButtonId(R.id.email_button)
             .build()
 
