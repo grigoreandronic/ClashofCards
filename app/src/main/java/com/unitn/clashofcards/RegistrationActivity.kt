@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.CallbackManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.unitn.clashofcards.model.User
+import com.unitn.clashofcards.model.UserSocial
 import kotlinx.android.synthetic.main.activity_registration.*
 import java.util.*
 
@@ -30,6 +32,7 @@ class RegistrationActivity : AppCompatActivity() {
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var mGoogleSignInOptions: GoogleSignInOptions
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var callbackManager: CallbackManager
 
     private val c = Calendar.getInstance()
     private val year = c.get(Calendar.YEAR)
@@ -49,6 +52,7 @@ class RegistrationActivity : AppCompatActivity() {
          val registration_password     = findViewById<TextView>(R.id.register_password)
          val registration_button     = findViewById<Button>(R.id.register_button_register)
          val google_button = findViewById<Button>(R.id.google_button_registration)
+        val facebook_button = findViewById<Button>(R.id.facebook_button_registration)
          firebaseAuth = FirebaseAuth.getInstance()
         //date picker
 
@@ -62,10 +66,12 @@ class RegistrationActivity : AppCompatActivity() {
 
         }
         configureGoogleSignIn()
-        google_button_registration.setOnClickListener {
+        google_button.setOnClickListener {
             signIn()
         }
+        facebook_button.setOnClickListener {
 
+        }
 
 
 
@@ -79,6 +85,8 @@ class RegistrationActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.register_sign_in).setOnClickListener {
             finish()
         }
+
+
 
 
 
@@ -130,10 +138,8 @@ class RegistrationActivity : AppCompatActivity() {
                 val user = firebaseAuth.currentUser
 
                 if (user != null) {
-                   val name = user.displayName.toString()
                     val email = user.email.toString()
-                    val uid = user.uid
-                    saveUserToFirebaseDatabase( "gg", name, "ff",email, uid,"ff")
+                    saveGoogleUserToFirebaseDatabase(email)
                 }
                 val intent = Intent(this, MenuActivity::class.java)
                 startActivity(intent)
@@ -194,7 +200,7 @@ class RegistrationActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
-        val user = User(uid,email)
+        val user = UserSocial(uid,email)
         ref.setValue(user)
             .addOnSuccessListener {
                 Log.d(TAG, "Finally we saved the user to Firebase Database")
