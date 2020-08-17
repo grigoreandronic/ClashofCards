@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "497481072404-ncic1o915534asubri1a4fs9adejukbu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unitn.clashofcards",
+            "certificate_hash": "33bde4da8ec104b451a1167b472fcabff9acbbe7"
+          }
+        },
+        {
           "client_id": "497481072404-rkja2195h5t0vsucm6bp3j2ilsvpggnv.apps.googleusercontent.com",
           "client_type": 3
         }
