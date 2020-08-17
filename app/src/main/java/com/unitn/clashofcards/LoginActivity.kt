@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
          findViewById<TextView>(R.id.login_sign_in).setOnClickListener {
              val intent = Intent(this, RegistrationActivity::class.java)
              startActivity(intent)
+             finish()
          }
 
     }
@@ -82,8 +83,8 @@ class LoginActivity : AppCompatActivity() {
         // Create and launch sign-in intent
         val authUiLayout = AuthMethodPickerLayout
             .Builder(R.layout.activity_login)
-            .setFacebookButtonId(R.id.facebook_button)
-            .setGoogleButtonId(R.id.google_button)
+            .setFacebookButtonId(R.id.facebook_button_login)
+            .setGoogleButtonId(R.id.google_button_login)
             .setEmailButtonId(R.id.email_button)
             .build()
 
