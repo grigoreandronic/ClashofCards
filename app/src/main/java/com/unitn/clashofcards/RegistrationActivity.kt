@@ -8,7 +8,12 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.AccessToken
 import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -17,6 +22,7 @@ import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
@@ -24,6 +30,7 @@ import com.unitn.clashofcards.model.User
 import com.unitn.clashofcards.model.UserSocial
 import kotlinx.android.synthetic.main.activity_registration.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class RegistrationActivity : AppCompatActivity() {
@@ -70,7 +77,7 @@ class RegistrationActivity : AppCompatActivity() {
             signIn()
         }
         facebook_button.setOnClickListener {
-
+            signInFacebook()
         }
 
 
@@ -91,6 +98,52 @@ class RegistrationActivity : AppCompatActivity() {
 
 
     }
+    private fun signInFacebook() {
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance()
+            .logInWithReadPermissions(this, listOf("email"))
+        LoginManager.getInstance()
+            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+                override fun onSuccess(loginResult: LoginResult) {
+
+                    handleFacebookAccessToken(loginResult.accessToken)
+                }
+
+                override fun onCancel() {
+                    Log.d(TAG, "facebook:onCancel")
+
+                }
+
+                override fun onError(error: FacebookException) {
+                    Log.d(TAG, "facebook:onError", error)
+                }
+            })
+    }
+
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        Log.d(TAG, "handleFacebookAccessToken:$token")
+
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    if (user != null) {
+                        val email = task.result?.user?.email.toString()
+                        saveSocialUserToFirebaseDatabase(email)
+                    }
+                    val intent = Intent(this, MenuActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
+                }
+
+            }
+    }
+
+
+
 
 
     private fun signIn() {
@@ -119,6 +172,7 @@ class RegistrationActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == RC_SIGN_IN) {
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -127,6 +181,8 @@ class RegistrationActivity : AppCompatActivity() {
             } catch (e: ApiException) {
                 Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
             }
+        } else{
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -139,7 +195,7 @@ class RegistrationActivity : AppCompatActivity() {
 
                 if (user != null) {
                     val email = user.email.toString()
-                    saveGoogleUserToFirebaseDatabase(email)
+                    saveSocialUserToFirebaseDatabase(email)
                 }
                 val intent = Intent(this, MenuActivity::class.java)
                 startActivity(intent)
@@ -196,7 +252,7 @@ class RegistrationActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveGoogleUserToFirebaseDatabase(email: String) {
+    private fun saveSocialUserToFirebaseDatabase(email: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
