@@ -5,18 +5,43 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.ErrorCodes
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.Scopes
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.FirebaseDatabase
+import com.unitn.clashofcards.feature.onboarding.OnBoardingActivity
+import com.unitn.clashofcards.model.User
+import com.unitn.clashofcards.model.UserSocial
 
 
 class LoginActivity : AppCompatActivity() {
-
+    private val RC_SIGN_IN: Int = 1
+    lateinit var mGoogleSignInClient: GoogleSignInClient
+    lateinit var mGoogleSignInOptions: GoogleSignInOptions
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var callbackManager: CallbackManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -24,6 +49,22 @@ class LoginActivity : AppCompatActivity() {
         val login_button_login    = findViewById<Button>(R.id.login_button_login)
         val email     = findViewById<TextView>(R.id.edit_login_email)
         val password = findViewById<TextView>(R.id.edit_login_password)
+        val google_button = findViewById<ImageView>(R.id.google_button_login)
+        val facebook_button = findViewById<ImageView>(R.id.facebook_button_login)
+        firebaseAuth = FirebaseAuth.getInstance()
+
+
+        configureGoogleSignIn()
+        google_button.setOnClickListener {
+            signIn()
+        }
+        facebook_button.setOnClickListener {
+            signInFacebook()
+        }
+
+
+
+
 
         login_button_login.setOnClickListener {
             performLogin(email.text.toString(),password.text.toString() )
@@ -39,6 +80,128 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    private fun signInFacebook() {
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance()
+            .logInWithReadPermissions(this, listOf("email"))
+        LoginManager.getInstance()
+            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+                override fun onSuccess(loginResult: LoginResult) {
+
+                    handleFacebookAccessToken(loginResult.accessToken)
+                }
+
+                override fun onCancel() {
+                    Log.d(RegistrationActivity.TAG, "facebook:onCancel")
+
+                }
+
+                override fun onError(error: FacebookException) {
+                    Log.d(RegistrationActivity.TAG, "facebook:onError", error)
+                }
+            })
+    }
+
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        Log.d(RegistrationActivity.TAG, "handleFacebookAccessToken:$token")
+
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = firebaseAuth.currentUser
+                    if (user != null) {
+                        val email = task.result?.user?.email.toString()
+                        saveSocialUserToFirebaseDatabase(email)
+                    }
+                } else {
+                    Toast.makeText(this, "Facebook sign in failed:(", Toast.LENGTH_LONG).show()
+                }
+
+            }
+    }
+
+
+
+
+
+    private fun signIn() {
+        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    private fun configureGoogleSignIn() {
+        val myScope =
+            Scope("https://www.googleapis.com/auth/user.birthday.read")
+        val myScope2 =
+            Scope(Scopes.PLUS_ME)
+        val myScope3 =
+            Scope(Scopes.PROFILE) //get name and id
+
+        mGoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestScopes(myScope, myScope)
+            .requestProfile()
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = GoogleSignIn.getClient(this, mGoogleSignInOptions)
+
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account : GoogleSignInAccount? =task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account!!)
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
+            }
+        } else{
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+
+    }
+
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
+            if (it.isSuccessful) {
+                val user = firebaseAuth.currentUser
+
+                if (user != null) {
+                    val email = user.email.toString()
+                    saveSocialUserToFirebaseDatabase(email)
+                }
+            } else {
+                Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun saveSocialUserToFirebaseDatabase(email: String) {
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
+        val user = UserSocial(uid,email)
+        ref.setValue(user)
+            .addOnSuccessListener {
+                Log.d(RegistrationActivity.TAG, "Finally we saved the user to Firebase Database")
+
+                val intent = Intent(this, OnBoardingActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+
+            }
+            .addOnFailureListener {
+                Log.d(RegistrationActivity.TAG, "Failed to set value to database: ${it.message}")
+            }
+    }
 
 
     private fun performLogin(email : String , password: String) {
@@ -71,114 +234,14 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-    private fun createSignInIntent() {
-        // [START auth_fui_create_intent]
-        // Choose authentication providers
-        val providers = arrayListOf(
-            AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.GoogleBuilder().build(),
-            AuthUI.IdpConfig.FacebookBuilder().build())
 
 
-        // Create and launch sign-in intent
-        val authUiLayout = AuthMethodPickerLayout
-            .Builder(R.layout.activity_login)
-           // .setFacebookButtonId(R.id.facebook_button_login)
-            // .setGoogleButtonId(R.id.google_button_login)
-            .setEmailButtonId(R.id.email_button)
-            .build()
 
-        startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setAuthMethodPickerLayout(authUiLayout)
-                .build(),
-            RC_SIGN_IN)
-        // [END auth_fui_create_intent]
-    }
 
-    // [START auth_fui_result]
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
 
-            if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                val intent = Intent(this,MenuActivity::class.java)
-                startActivity(intent)
 
-            } else {
-                    if(response == null){
-                        finish()
-                    }
-                    if (response?.getError()?.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                        //Show No Internet Notification
-                        return
-                    }
 
-                    if(response?.getError()?.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                        Toast.makeText(this, response?.error?.errorCode.toString(), Toast.LENGTH_LONG)
-                            .show()
-                        Log.d("ERRORCODE", response?.error?.errorCode.toString())
-                        return
-                    }
-
-            }
-        }
-    }
-    private fun signOut() {
-        // [START auth_fui_signout]
-        AuthUI.getInstance()
-            .signOut(this)
-            .addOnCompleteListener {
-                // ...
-            }
-        // [END auth_fui_signout]
-    }
-
-    private fun delete() {
-        // [START auth_fui_delete]
-        AuthUI.getInstance()
-            .delete(this)
-            .addOnCompleteListener {
-                // ...
-            }
-        // [END auth_fui_delete]
-    }
-
-    private fun themeAndLogo() {
-        val providers = emptyList<AuthUI.IdpConfig>()
-
-        // [START auth_fui_theme_logo]
-        startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setTheme(R.style.AppTheme)
-                .setLogo(R.drawable.com_facebook_button_login_logo) // Set logo drawable
-                .build(),
-            RC_SIGN_IN)
-        // [END auth_fui_theme_logo]
-    }
-
-    private fun privacyAndTerms() {
-        val providers = emptyList<AuthUI.IdpConfig>()
-        // [START auth_fui_pp_tos]
-        startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setTosAndPrivacyPolicyUrls(
-                    "https://example.com/terms.html",
-                    "https://example.com/privacy.html")
-                .build(),
-            RC_SIGN_IN)
-        // [END auth_fui_pp_tos]
-    }
 
     companion object {
 

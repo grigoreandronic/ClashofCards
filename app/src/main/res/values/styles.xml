@@ -1,20 +1,11 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:textColorHint">@color/grey</item>
         <item name="android:fontFamily">@font/regular</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-
-    </style>
-
-    <style name="FirebaseLoginTheme" parent="FirebaseUI">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@drawable/com_facebook_button_icon</item>
     </style>
 
     <style name="PrimaryButton">
@@ -26,4 +17,29 @@
         <item name="android:textColor">@color/orange</item>
         <item name="android:textSize">18dp</item>
     </style>
+
+
+
+
+    <!-- Theme for OnBoardingActivity (applying some transition) -->
+    <style name="AppTheme.OnBoarding">
+        <item name="android:windowSharedElementsUseOverlay">false</item>
+        <item name="android:windowContentTransitions">true</item>
+
+        <item name="android:windowExitTransition">@transition/activity_main_exit</item>
+        <item name="android:windowReenterTransition">@transition/activity_main_reenter</item>
+    </style>
+    <!--Styling TextInputLayout colors-->
+    <style name="EditText.Login" parent="Widget.AppCompat.EditText">
+        <item name="colorControlNormal">@color/colorGrey</item>
+        <item name="colorControlActivated">@color/colorGrey</item>
+    </style>
+    <style name="Widget.MaterialComponents.Button.TextButton.OnBoardTextButton"
+        parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorPurple</item>
+    </style>
+
+
 </resources>

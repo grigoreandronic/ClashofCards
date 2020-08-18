@@ -16,7 +16,6 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
@@ -28,18 +27,11 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import com.unitn.clashofcards.model.User
 import com.unitn.clashofcards.model.UserSocial
-import kotlinx.android.synthetic.main.activity_registration.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class RegistrationActivity : AppCompatActivity() {
 
-    private val RC_SIGN_IN: Int = 1
-    lateinit var mGoogleSignInClient: GoogleSignInClient
-    lateinit var mGoogleSignInOptions: GoogleSignInOptions
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var callbackManager: CallbackManager
 
     private val c = Calendar.getInstance()
     private val year = c.get(Calendar.YEAR)
@@ -58,9 +50,6 @@ class RegistrationActivity : AppCompatActivity() {
          val registration_username     = findViewById<TextView>(R.id.register_username)
          val registration_password     = findViewById<TextView>(R.id.register_password)
          val registration_button     = findViewById<Button>(R.id.register_button_register)
-         val google_button = findViewById<Button>(R.id.google_button_registration)
-        val facebook_button = findViewById<Button>(R.id.facebook_button_registration)
-         firebaseAuth = FirebaseAuth.getInstance()
         //date picker
 
         registration_birth_date.setOnClickListener {
@@ -72,13 +61,7 @@ class RegistrationActivity : AppCompatActivity() {
             dpd.show()
 
         }
-        configureGoogleSignIn()
-        google_button.setOnClickListener {
-            signIn()
-        }
-        facebook_button.setOnClickListener {
-            signInFacebook()
-        }
+
 
 
 
@@ -98,113 +81,7 @@ class RegistrationActivity : AppCompatActivity() {
 
 
     }
-    private fun signInFacebook() {
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance()
-            .logInWithReadPermissions(this, listOf("email"))
-        LoginManager.getInstance()
-            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
 
-                    handleFacebookAccessToken(loginResult.accessToken)
-                }
-
-                override fun onCancel() {
-                    Log.d(TAG, "facebook:onCancel")
-
-                }
-
-                override fun onError(error: FacebookException) {
-                    Log.d(TAG, "facebook:onError", error)
-                }
-            })
-    }
-
-    private fun handleFacebookAccessToken(token: AccessToken) {
-        Log.d(TAG, "handleFacebookAccessToken:$token")
-
-        val credential = FacebookAuthProvider.getCredential(token.token)
-        firebaseAuth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    if (user != null) {
-                        val email = task.result?.user?.email.toString()
-                        saveSocialUserToFirebaseDatabase(email)
-                    }
-                    val intent = Intent(this, MenuActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
-                }
-
-            }
-    }
-
-
-
-
-
-    private fun signIn() {
-        val signInIntent: Intent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    private fun configureGoogleSignIn() {
-        val myScope =
-            Scope("https://www.googleapis.com/auth/user.birthday.read")
-        val myScope2 =
-            Scope(Scopes.PLUS_ME)
-        val myScope3 =
-            Scope(Scopes.PROFILE) //get name and id
-
-        mGoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestScopes(myScope, myScope)
-            .requestProfile()
-            .requestEmail()
-            .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, mGoogleSignInOptions)
-
-    }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account : GoogleSignInAccount? =task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account!!)
-            } catch (e: ApiException) {
-                Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
-            }
-        } else{
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
-            if (it.isSuccessful) {
-                val user = firebaseAuth.currentUser
-
-                if (user != null) {
-                    val email = user.email.toString()
-                    saveSocialUserToFirebaseDatabase(email)
-                }
-                val intent = Intent(this, MenuActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 
     private fun performRegister(name:String,surname:String,email:String,username: String,password: String, birthDate:String ) {
 
@@ -252,24 +129,6 @@ class RegistrationActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveSocialUserToFirebaseDatabase(email: String) {
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-
-        val user = UserSocial(uid,email)
-        ref.setValue(user)
-            .addOnSuccessListener {
-                Log.d(TAG, "Finally we saved the user to Firebase Database")
-
-                val intent = Intent(this, MenuActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-
-            }
-            .addOnFailureListener {
-                Log.d(TAG, "Failed to set value to database: ${it.message}")
-            }
-    }
     private fun saveUserToFirebaseDatabase(username: String,name: String,surname: String,email: String,password: String,birthDate: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
@@ -277,7 +136,7 @@ class RegistrationActivity : AppCompatActivity() {
         val user = User(uid, username,name,surname, email,password, birthDate)
         ref.setValue(user)
             .addOnSuccessListener {
-                Log.d(TAG, "Finally we saved the user to Firebase Database")
+                Log.d(RegistrationActivity.TAG, "Finally we saved the user to Firebase Database")
 
                 val intent = Intent(this, MenuActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -285,9 +144,10 @@ class RegistrationActivity : AppCompatActivity() {
 
             }
             .addOnFailureListener {
-                Log.d(TAG, "Failed to set value to database: ${it.message}")
+                Log.d(RegistrationActivity.TAG, "Failed to set value to database: ${it.message}")
             }
     }
+
     companion object {
         val TAG = "RegistrationActivity"
 
