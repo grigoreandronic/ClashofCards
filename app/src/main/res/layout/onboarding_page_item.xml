@@ -36,7 +36,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.274"
+        app:layout_constraintVertical_bias="0.23"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -46,7 +46,7 @@
         android:layout_marginTop="100dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/colorBlueMidnight"
+        android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="@+id/img"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/img"
