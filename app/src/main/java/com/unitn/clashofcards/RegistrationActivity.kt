@@ -72,7 +72,7 @@ class RegistrationActivity : AppCompatActivity() {
             performRegister(registration_name.text.toString(),registration_surname.text.toString(),registration_email.text.toString(),registration_username.text.toString(),registration_password.text.toString(),registration_birth_date.text.toString())
         }
 
-        findViewById<TextView>(R.id.register_sign_in).setOnClickListener {
+        findViewById<TextView>(R.id.signintologin).setOnClickListener {
             finish()
         }
 
