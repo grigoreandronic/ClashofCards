@@ -16,7 +16,7 @@ import com.unitn.clashofcards.R
 
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-class PopTransition(context: Context, attrs: AttributeSet) : Visibility(context, attrs) {
+class   PopTransition(context: Context, attrs: AttributeSet) : Visibility(context, attrs) {
 
     private var startScale: Float = 0.0f
     private var endScale: Float = 1.0f
