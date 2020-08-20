@@ -30,7 +30,7 @@ class OnBoardingPagerAdapter(private val onBoardingPageList:Array<OnBoardingPage
 class PagerViewHolder(private val root: View) : RecyclerView.ViewHolder(root) {
     fun bind(onBoardingPage: OnBoardingPage) {
        val res = root.context.resources
-        root.subTitleTv?.text = res.getString(onBoardingPage.subTitleResource)
+        //root.subTitleTv?.text = res.getString(onBoardingPage.subTitleResource)
         root.descTV?.text = res.getString(onBoardingPage.descriptionResource)
         root.img.setImageResource( onBoardingPage.logoResource)
     }

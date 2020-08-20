@@ -14,7 +14,7 @@
                 app:motionTarget="@id/PlayBtn"/>
 
             <KeyAttribute
-                android:translationY="200dp"
+                android:translationY="400dp"
                 app:framePosition="100"
                 app:motionTarget="@id/PlayBtn"/>
 
