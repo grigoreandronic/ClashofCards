@@ -24,6 +24,8 @@
         <activity android:name=".MenuActivity"> </activity>
         <activity android:name=".RegistrationActivity"> </activity>
         <activity android:name=".feature.onboarding.OnBoardingActivity" />
+        <activity android:name=".DeckActivity" />
+        <activity android:name=".DeckCardsActivity" />
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
 

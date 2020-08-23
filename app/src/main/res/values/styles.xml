@@ -4,8 +4,11 @@
         <!-- Customize your theme here. -->
         <item name="android:textColorHint">@color/grey</item>
         <item name="android:fontFamily">@font/regular</item>
-        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="PrimaryButton">
