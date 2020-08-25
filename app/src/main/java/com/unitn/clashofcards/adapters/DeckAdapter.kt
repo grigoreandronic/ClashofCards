@@ -48,7 +48,10 @@ class DeckAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
 
         holder.icons.setOnClickListener {
             val intent = Intent(context, DeckCardsActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            var id = arrayList.get(holder.layoutPosition)
+
+            intent.putExtra("idDeck","${id.id}")
             context.startActivity(intent)
         }
         holder.titles.setOnClickListener {

@@ -25,7 +25,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.unitn.clashofcards.feature.onboarding.OnBoardingActivity
 import com.unitn.clashofcards.model.UserSocial
 
@@ -36,6 +37,8 @@ class LoginActivity : AppCompatActivity() {
     lateinit var mGoogleSignInOptions: GoogleSignInOptions
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var callbackManager: CallbackManager
+    val db = Firebase.firestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -61,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         login_button_login.setOnClickListener {
-            performLogin(email.text.toString(),password.text.toString() )
+            performLogin(email.text.toString(), password.text.toString())
         }
 
 
@@ -106,7 +109,14 @@ class LoginActivity : AppCompatActivity() {
                     val user = firebaseAuth.currentUser
                     if (user != null) {
                         val email = task.result?.user?.email.toString()
-                        saveSocialUserToFirebaseDatabase(email)
+                        val isNew: Boolean = task.result!!.additionalUserInfo!!.isNewUser
+                        if(isNew){
+                            saveSocialUserToFirebaseDatabase(email)
+                        }else{
+                            val intent = Intent(this, OnBoardingActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }
                     }
                 } else {
                     Toast.makeText(this, "Facebook sign in failed:(", Toast.LENGTH_LONG).show()
@@ -161,15 +171,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        val credential2 = GoogleAuthProvider.getCredential(acct.idToken, null)
 
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
+
             if (it.isSuccessful) {
                 val user = firebaseAuth.currentUser
 
                 if (user != null) {
                     val email = user.email.toString()
-                    saveSocialUserToFirebaseDatabase(email)
+                    val isNew: Boolean = it.result!!.additionalUserInfo!!.isNewUser
+                    if(isNew){
+                        saveSocialUserToFirebaseDatabase(email)
+                    }else{
+                        val intent = Intent(this, OnBoardingActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }
                 }
             } else {
                 Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
@@ -179,26 +198,25 @@ class LoginActivity : AppCompatActivity() {
 
     private fun saveSocialUserToFirebaseDatabase(email: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-
-        val user = UserSocial(uid,email)
-        ref.setValue(user)
-            .addOnSuccessListener {
-                Log.d(RegistrationActivity.TAG, "Finally we saved the user to Firebase Database")
-
+        val user = UserSocial(uid, email)
+        db.collection("Users").document("$uid")
+            .set(user)
+            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully written!")
                 val intent = Intent(this, OnBoardingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-                finish()
+            }
+            .addOnFailureListener { e -> Log.w(
+                "TAG",
+                "Failed to set value to database: ${e.message}",
+                e
+            )
+            }
 
-            }
-            .addOnFailureListener {
-                Log.d(RegistrationActivity.TAG, "Failed to set value to database: ${it.message}")
-            }
     }
 
 
-    private fun performLogin(email : String , password: String) {
+    private fun performLogin(email: String, password: String) {
         if (email.isEmpty()) {
             Toast.makeText(this, "Please fill out email/pw.", Toast.LENGTH_SHORT).show()
             return
@@ -214,8 +232,7 @@ class LoginActivity : AppCompatActivity() {
                 if (!it.isSuccessful) return@addOnCompleteListener
 
                 Log.d("Login", "Successfully logged in: ${it.result?.user?.uid}")
-
-                val intent = Intent(this, MenuActivity::class.java)
+                val intent = Intent(this, OnBoardingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()

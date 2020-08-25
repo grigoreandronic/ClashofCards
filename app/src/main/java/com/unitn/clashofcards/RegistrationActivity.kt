@@ -10,13 +10,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.unitn.clashofcards.feature.onboarding.OnBoardingActivity
 import com.unitn.clashofcards.model.User
 import java.util.*
 
 
 class RegistrationActivity : AppCompatActivity() {
 
-
+    val db = Firebase.firestore
     private val c = Calendar.getInstance()
     private val year = c.get(Calendar.YEAR)
     private val month = c.get(Calendar.MONTH)
@@ -115,21 +118,18 @@ class RegistrationActivity : AppCompatActivity() {
 
     private fun saveUserToFirebaseDatabase(username: String,name: String,surname: String,email: String,password: String,birthDate: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-
         val user = User(uid, username,name,surname, email,password, birthDate)
-        ref.setValue(user)
-            .addOnSuccessListener {
-                Log.d(RegistrationActivity.TAG, "Finally we saved the user to Firebase Database")
 
-                val intent = Intent(this, MenuActivity::class.java)
+        db.collection("Users").document("$uid")
+            .set(user)
+            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully written!")
+                val intent = Intent(this, OnBoardingActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
+            }
+            .addOnFailureListener { e -> Log.w("TAG", "Failed to set value to database: ${e.message}", e)
+            }
 
-            }
-            .addOnFailureListener {
-                Log.d(RegistrationActivity.TAG, "Failed to set value to database: ${it.message}")
-            }
     }
 
     companion object {

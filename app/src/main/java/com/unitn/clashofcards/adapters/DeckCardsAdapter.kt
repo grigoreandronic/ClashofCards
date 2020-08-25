@@ -12,10 +12,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.unitn.clashofcards.R
+import com.unitn.clashofcards.model.Card
 import com.unitn.clashofcards.model.Deck
 
 
-class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
+class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
     RecyclerView.Adapter<DeckCardsAdapter.ItemHolder>() {
 
 
@@ -34,7 +35,7 @@ class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
             .skipMemoryCache(true)
             .centerInside()
 
-        val charItem: Deck = arrayList[position]
+        val charItem: Card = arrayList[position]
         Glide.with(context)
             .load(charItem.icons!!)
             .apply(options)
