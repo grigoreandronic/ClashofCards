@@ -25,6 +25,12 @@
         <activity android:name=".feature.onboarding.OnBoardingActivity" />
         <activity android:name=".DeckActivity" />
         <activity android:name=".DeckCardsActivity" />
+        <activity android:name=".MarketDeckActivity" />
+        <activity android:name=".MarketDeckCardsActivity" />
+        <activity android:name=".marketplace.CheckoutActivity" />
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
 

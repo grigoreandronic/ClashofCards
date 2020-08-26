@@ -25,10 +25,12 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.unitn.clashofcards.feature.onboarding.OnBoardingActivity
-import com.unitn.clashofcards.model.UserSocial
+import com.unitn.clashofcards.model.User
+import java.util.ArrayList
 
 
 class LoginActivity : AppCompatActivity() {
@@ -171,7 +173,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        val credential2 = GoogleAuthProvider.getCredential(acct.idToken, null)
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
@@ -198,7 +199,25 @@ class LoginActivity : AppCompatActivity() {
 
     private fun saveSocialUserToFirebaseDatabase(email: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val user = UserSocial(uid, email)
+        var toRef: DocumentReference
+        var toRef2: DocumentReference
+        var toRef3: DocumentReference
+
+        var decks: ArrayList<DocumentReference> = ArrayList<DocumentReference>()
+        toRef=(db.collection("Decks").document("U15wO66e7lTXJ5W0jHDD"))
+        toRef2=(db.collection("Decks").document("5pB8d5qgUpVkAGBi7nt0"))
+        toRef3=(db.collection("Decks").document("mejeej8pDuQ70ePwTCH6"))
+
+        decks.add(toRef)
+        decks.add(toRef2)
+        decks.add(toRef3)
+
+
+        var user : User = User()
+        user.uid=uid
+        user.email=email
+        user.Decks=decks
+
         db.collection("Users").document("$uid")
             .set(user)
             .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully written!")
@@ -212,6 +231,7 @@ class LoginActivity : AppCompatActivity() {
                 e
             )
             }
+
 
     }
 

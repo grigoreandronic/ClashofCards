@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.unitn.clashofcards.DeckActivity
+import com.unitn.clashofcards.MarketDeckActivity
 import com.unitn.clashofcards.R
+import com.unitn.clashofcards.marketplace.CheckoutActivity
+import kotlinx.android.synthetic.main.menu_bar.*
 
 class OnBoardingActivity : AppCompatActivity() {
 
@@ -16,8 +19,13 @@ class OnBoardingActivity : AppCompatActivity() {
         setContentView(R.layout.onboarding_activity)
 
         val deck_button = findViewById<MaterialButton>(R.id.DeckBtn)
+        val marketplace_button = findViewById<MaterialButton>(R.id.MarketplaceBtn)
         deck_button.setOnClickListener {
             val intent = Intent(this, DeckActivity::class.java)
+            startActivity(intent)
+        }
+        marketplace_button.setOnClickListener {
+            val intent = Intent(this, CheckoutActivity::class.java)
             startActivity(intent)
         }
 

@@ -19,7 +19,7 @@ import com.unitn.clashofcards.model.User
 import kotlin.reflect.typeOf
 
 
-class DeckActivity : AppCompatActivity() {
+class MarketDeckActivity : AppCompatActivity() {
     // [START declare_database_ref]
 
     private var recyclerView: RecyclerView? = null
@@ -29,18 +29,16 @@ class DeckActivity : AppCompatActivity() {
     val db = Firebase.firestore
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_deck)
+        setContentView(R.layout.activity_marketdeck)
         recyclerView = findViewById(R.id.recycler_view_item)
         gridLayoutManager =
             GridLayoutManager(applicationContext, 2, LinearLayoutManager.VERTICAL, false)
         recyclerView?.layoutManager = gridLayoutManager
         recyclerView?.setHasFixedSize(true)
         charItem = ArrayList()
-            setAlphas()
+        setAlphas()
 
     }
 
@@ -48,47 +46,33 @@ class DeckActivity : AppCompatActivity() {
         val docRef = db.collection("Decks")
         var deck: Deck
         charItem!!.clear()
-        db.collection("Users").document("${FirebaseAuth.getInstance().uid}")
+
+        db.collection("Decks").whereEqualTo("premium", true)
             .get()
             .addOnSuccessListener { document ->
-                if (document != null) {
-                    val reference: ArrayList<DocumentReference> = document.get("decks") as ArrayList<DocumentReference>
-
-                    reference.forEach{
-                        println("primo deck "+it)
-                    it.get()
-                        .addOnSuccessListener { document ->
-                            if (document != null) {
-
-                                val alpha = document.get("alpha").toString()
-                                val icons = document.get("icons").toString()
-                                val id =document.id
-                                deck = Deck(id,icons,alpha)
-                                if(deck!=null){
-                                    charItem!!.add(deck)
-                                    alphaAdapters = DeckAdapter(applicationContext, ArrayList(charItem!!))
-                                    recyclerView?.adapter = alphaAdapters
-                                    recyclerView?.adapter?.notifyDataSetChanged()
-                                }
-                            } else {
-                                Log.d("TAG", "No such document")
-                            }
+                document.forEach {
+                    if (document != null) {
+                        val alpha = it.get("alpha").toString()
+                        val icons = it.get("icons").toString()
+                        val id =it.id
+                        val premium : Boolean = it.get("premium") as Boolean
+                        deck = Deck(id,icons, alpha,premium)
+                        if (deck != null) {
+                            charItem!!.add(deck)
+                            alphaAdapters = DeckAdapter(applicationContext, ArrayList(charItem!!))
+                            recyclerView?.adapter = alphaAdapters
+                            recyclerView?.adapter?.notifyDataSetChanged()
                         }
-                        .addOnFailureListener { exception ->
-                            Log.d("TAG", "get failed with ", exception)
-                        }
+                    } else {
+                        Log.d("TAG", "No such document")
                     }
-                } else {
-                    Log.d("TAG", "No such document")
                 }
             }
             .addOnFailureListener { exception ->
                 Log.d("TAG", "get failed with ", exception)
             }
+                }
     }
-
-    }
-
 
 
 

@@ -9,8 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.local.ReferenceSet
 import com.google.firebase.ktx.Firebase
 import com.unitn.clashofcards.feature.onboarding.OnBoardingActivity
 import com.unitn.clashofcards.model.User
@@ -41,10 +42,16 @@ class RegistrationActivity : AppCompatActivity() {
 
         registration_birth_date.setOnClickListener {
 
-            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                // Display Selected date in TextView
-                registration_birth_date.setText("" + dayOfMonth + "/" + month + "/" + year)
-            }, year, month, day)
+            val dpd = DatePickerDialog(
+                this,
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    // Display Selected date in TextView
+                    registration_birth_date.setText("" + dayOfMonth + "/" + month + "/" + year)
+                },
+                year,
+                month,
+                day
+            )
             dpd.show()
 
         }
@@ -56,7 +63,14 @@ class RegistrationActivity : AppCompatActivity() {
 
 
         registration_button.setOnClickListener {
-            performRegister(registration_name.text.toString(),registration_surname.text.toString(),registration_email.text.toString(),registration_username.text.toString(),registration_password.text.toString(),registration_birth_date.text.toString())
+            performRegister(
+                registration_name.text.toString(),
+                registration_surname.text.toString(),
+                registration_email.text.toString(),
+                registration_username.text.toString(),
+                registration_password.text.toString(),
+                registration_birth_date.text.toString()
+            )
         }
 
         findViewById<TextView>(R.id.signintologin).setOnClickListener {
@@ -70,7 +84,14 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
 
-    private fun performRegister(name:String,surname:String,email:String,username: String,password: String, birthDate:String ) {
+    private fun performRegister(
+        name: String,
+        surname: String,
+        email: String,
+        username: String,
+        password: String,
+        birthDate: String
+    ) {
 
 
         if (name.isEmpty()) {
@@ -108,7 +129,7 @@ class RegistrationActivity : AppCompatActivity() {
                 // else if successful
                 Log.d(TAG, "Successfully created user with uid: ${it.result?.user?.uid}")
 
-                saveUserToFirebaseDatabase(username,name,surname,email,password,birthDate)
+                saveUserToFirebaseDatabase(username, name, surname, email, password, birthDate)
             }
             .addOnFailureListener{
                 Log.d(TAG, "Failed to create user: ${it.message}")
@@ -116,10 +137,26 @@ class RegistrationActivity : AppCompatActivity() {
             }
     }
 
-    private fun saveUserToFirebaseDatabase(username: String,name: String,surname: String,email: String,password: String,birthDate: String) {
+    private fun saveUserToFirebaseDatabase(username: String, name: String, surname: String, email: String, password: String, birthDate: String) {
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val user = User(uid, username,name,surname, email,password, birthDate)
+        var primo = "com.google.firebase.firestore.DocumentReference@bc73cc9c"
+        var secondo = "com.google.firebase.firestore.DocumentReference@ee03a3c3"
+        var terzo = "com.google.firebase.firestore.DocumentReference@78d1298b"
+        var toRef: DocumentReference
+        var toRef2: DocumentReference
+        var toRef3: DocumentReference
 
+        var Decks: ArrayList<DocumentReference> = ArrayList<DocumentReference>()
+        toRef=(db.collection("Decks").document("U15wO66e7lTXJ5W0jHDD"))
+        toRef2=(db.collection("Decks").document("5pB8d5qgUpVkAGBi7nt0"))
+        toRef3=(db.collection("Decks").document("mejeej8pDuQ70ePwTCH6"))
+
+        Decks.add(toRef)
+        Decks.add(toRef2)
+        Decks.add(toRef3)
+
+
+        val user = User(uid, username, name, surname, email, password, birthDate, Decks)
         db.collection("Users").document("$uid")
             .set(user)
             .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully written!")
@@ -127,7 +164,11 @@ class RegistrationActivity : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
-            .addOnFailureListener { e -> Log.w("TAG", "Failed to set value to database: ${e.message}", e)
+            .addOnFailureListener { e -> Log.w(
+                "TAG",
+                "Failed to set value to database: ${e.message}",
+                e
+            )
             }
 
     }

@@ -19,8 +19,8 @@ import com.unitn.clashofcards.R.layout.cardlayout
 import com.unitn.clashofcards.model.Deck
 
 
-class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
-    RecyclerView.Adapter<DeckCardsAdapter.ItemHolder>() {
+class DeckCardsMarketAdapter(var context: Context, var arrayList: ArrayList<Card>) :
+    RecyclerView.Adapter<DeckCardsMarketAdapter.ItemHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
@@ -72,8 +72,8 @@ class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
 
     class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var icons = itemView.findViewById<ImageView>(R.id.icon_image_viewcards)
-        var titles = itemView.findViewById<TextView>(R.id.title_text_viewcards)
+        var icons = itemView.findViewById<ImageView>(R.id.market_icon_image_viewcards)
+        var titles = itemView.findViewById<TextView>(R.id.market_title_text_viewcards)
 
     }
 }
