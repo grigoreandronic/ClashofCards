@@ -25,7 +25,7 @@ class OnBoardingActivity : AppCompatActivity() {
             startActivity(intent)
         }
         marketplace_button.setOnClickListener {
-            val intent = Intent(this, CheckoutActivity::class.java)
+            val intent = Intent(this, MarketDeckActivity::class.java)
             startActivity(intent)
         }
 
