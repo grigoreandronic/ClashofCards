@@ -11,10 +11,16 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.button.MaterialButton
+import com.google.gson.JsonArray
 import com.unitn.clashofcards.DeckCardsActivity
 import com.unitn.clashofcards.MarketDeckCardsActivity
+import com.unitn.clashofcards.MyJSON
 import com.unitn.clashofcards.R
+import com.unitn.clashofcards.marketplace.CheckoutActivity
 import com.unitn.clashofcards.model.Deck
+import com.unitn.clashofcards.util.Json
+import org.json.JSONArray
 
 
 class DeckMarketAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
@@ -23,7 +29,7 @@ class DeckMarketAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val viewHolder = LayoutInflater.from(parent.context)
-            .inflate(R.layout.grid_view_layout_deck, parent, false)
+            .inflate(R.layout.grid_view_layout_marketdeck, parent, false)
         return ItemHolder(viewHolder)
     }
 
@@ -43,17 +49,27 @@ class DeckMarketAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
             .into(holder.icons)
 
         holder.titles.text = charItem.alpha
-
+        holder.buy_button.text = "Buy"
         holder.icons.setOnClickListener {
             val intent = Intent(context, MarketDeckCardsActivity::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             var id = arrayList.get(holder.layoutPosition)
 
             intent.putExtra("idDeck","${id.id}")
             context.startActivity(intent)
         }
         holder.titles.setOnClickListener {
-            Toast.makeText(context, charItem.alpha, Toast.LENGTH_LONG).show()
+
+            Toast.makeText(context, holder.titles.text, Toast.LENGTH_LONG).show()
+        }
+        holder.buy_button.setOnClickListener{
+            var json = MyJSON()
+            json.setBuyItem(holder.layoutPosition)
+            val intent = Intent(context, CheckoutActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            var id = arrayList.get(holder.layoutPosition)
+            intent.putExtra("idDeck","${id.id}")
+            context.startActivity(intent)
         }
 
     }
@@ -62,6 +78,6 @@ class DeckMarketAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
 
         var icons = itemView.findViewById<ImageView>(R.id.market_icon_image_view)
         var titles = itemView.findViewById<TextView>(R.id.market_title_text_view)
-
+        var buy_button = itemView.findViewById<MaterialButton>(R.id.buy_button_deck)
     }
 }
