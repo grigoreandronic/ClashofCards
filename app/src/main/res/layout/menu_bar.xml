@@ -9,38 +9,40 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/DeckBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton.OnBoardTextButton"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="100dp"
         android:text="@string/deck"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.094"
+        app:layout_constraintEnd_toStartOf="@+id/MarketplaceBtn"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/MarketplaceBtn"
         style="@style/Widget.MaterialComponents.Button.TextButton.OnBoardTextButton"
-        android:text="@string/marketplace"
+        android:layout_marginTop="100dp"
 
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/marketplace"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.801"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.087" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/DeckBtn"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/bold"
         android:text="Mario Rossi"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        app:chipBackgroundColor="#00FFFFFF"
         app:chipIcon="@drawable/star"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.008" />
+        app:layout_constraintVertical_bias="0.022" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

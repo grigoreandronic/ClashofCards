@@ -72,13 +72,12 @@
             android:text="A letter with an apple"
             android:textColor="#777777" />
 
-        <include
+        <Button
             android:id="@+id/googlePayButton"
-            layout="@layout/buy_with_googlepay_button"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/buy_button_height"
-            android:layout_marginBottom="20dp"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
 
     </LinearLayout>
 
