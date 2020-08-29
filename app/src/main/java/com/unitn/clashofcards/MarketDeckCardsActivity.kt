@@ -10,6 +10,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.unitn.clashofcards.adapters.DeckAdapter
 import com.unitn.clashofcards.adapters.DeckCardsAdapter
+import com.unitn.clashofcards.adapters.DeckCardsMarketAdapter
 import com.unitn.clashofcards.model.Deck
 import com.unitn.clashofcards.model.Card
 
@@ -20,7 +21,7 @@ class MarketDeckCardsActivity : AppCompatActivity() {
     private var recyclerView: RecyclerView? = null
     private var charItem: MutableList<Card>? = null
     private var gridLayoutManager: GridLayoutManager? = null
-    private var alphaAdapters: DeckCardsAdapter? = null
+    private var alphaAdapters: DeckCardsMarketAdapter? = null
     val db = Firebase.firestore
 
 
@@ -57,7 +58,7 @@ class MarketDeckCardsActivity : AppCompatActivity() {
                         println("cacard"+card)
                     if(card!=null){
                         charItem!!.add(card)
-                        alphaAdapters = DeckCardsAdapter(applicationContext, ArrayList(charItem!!))
+                        alphaAdapters = DeckCardsMarketAdapter(applicationContext, ArrayList(charItem!!))
                         recyclerView?.adapter = alphaAdapters
                         recyclerView?.adapter?.notifyDataSetChanged()
                     }

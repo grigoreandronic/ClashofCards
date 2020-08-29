@@ -26,9 +26,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.common.api.ApiException
 import com.unitn.clashofcards.util.Json
 import com.google.android.gms.wallet.*
+import com.google.gson.JsonArray
+import com.unitn.clashofcards.MyJSON
 import com.unitn.clashofcards.R
 import kotlinx.android.synthetic.main.activity_checkout.*
 import org.json.JSONArray
@@ -119,7 +122,7 @@ class CheckoutActivity : AppCompatActivity() {
             Toast.makeText(
                     this,
                     "Unfortunately, Google Pay is not available on this device",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_LONG).show()
         }
     }
     
@@ -248,25 +251,29 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun fetchRandomDeck() : JSONObject {
+        var json = MyJSON()
         if (!::deckList.isInitialized) {
-            deckList = Json.readFromResources(this, R.raw.tshirts)
-        }
+            deckList= json.getArray()
 
-        val randomIndex:Int = Math.round(Math.random() * (deckList.length() - 1)).toInt()
-        return deckList.getJSONObject(0)
+        }
+        return deckList.getJSONObject(json.getBuyItem())
     }
 
     private fun displayDeck(deck:JSONObject) {
-        detailTitle.setText(deck.getString("title"))
-        detailPrice.setText("\$${deck.getString("price")}")
+        val options: RequestOptions = RequestOptions()
+            .skipMemoryCache(true)
+            .centerInside()
+        detailTitle.text = deck.getString("alpha")
+        detailPrice.text = "\$${deck.getString("price")}"
 
         val escapedHtmlText:String = Html.fromHtml(deck.getString("description")).toString()
-        detailDescription.setText(Html.fromHtml(escapedHtmlText))
+        detailDescription.text = Html.fromHtml(escapedHtmlText)
         Glide.with(applicationContext)
-            .load(deck.getString("image"))
+            .load(deck.getString("icons"))
+            .apply(options)
             .into(detailImage)
-        val imageUri = "@drawable/${deck.getString("image")}"
-        val imageResource = resources.getIdentifier(imageUri, null, packageName)
+        //val imageUri = "@drawable/${deck.getString("image")}"
+        //val imageResource = resources.getIdentifier(imageUri, null, packageName)
         //detailImage.setImageResource(imageResource)
     }
 }

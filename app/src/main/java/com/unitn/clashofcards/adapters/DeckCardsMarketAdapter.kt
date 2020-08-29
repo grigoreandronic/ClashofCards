@@ -25,7 +25,7 @@ class DeckCardsMarketAdapter(var context: Context, var arrayList: ArrayList<Card
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val viewHolder = LayoutInflater.from(parent.context)
-            .inflate(R.layout.grid_view_layout_deckcards, parent, false)
+            .inflate(R.layout.grid_view_layout_marketdeckcards, parent, false)
         context= parent.context
         return ItemHolder(viewHolder)
     }
@@ -52,12 +52,12 @@ class DeckCardsMarketAdapter(var context: Context, var arrayList: ArrayList<Card
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(true)
             dialog.setContentView(cardlayout)
-            dialog.getWindow()?.setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
 
             val cardimage = dialog.findViewById<ImageView>(R.id.cardImage)
             val cardtext    = dialog.findViewById<TextView>(R.id.cardTitle)
-            cardtext.setText(holder.titles.text.toString())
+            cardtext.text = holder.titles.text.toString()
             Glide.with(context)
                 .load(charItem.icons)
                 .apply(options)
