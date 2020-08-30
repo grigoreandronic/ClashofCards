@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="#00FFFFFF"
     app:cardCornerRadius="8dp"
     app:cardElevation="5dp"
     app:cardPreventCornerOverlap="true"
@@ -16,16 +17,20 @@
         android:id="@+id/cardLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/cardborder"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="10dp">
 
         <ImageView
             android:id="@+id/cardImage"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_weight="1"
-            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
 
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
             android:foregroundGravity="center_vertical|clip_horizontal|center"
             android:src="@drawable/letter_a"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,76 +41,236 @@
             android:id="@+id/cardTitle"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="30dp"
             android:gravity="center"
             android:text="Title Text"
+            android:textAllCaps="true"
+            android:textAppearance="@style/permalink"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/cardImage"
             app:layout_constraintStart_toStartOf="@+id/cardImage"
             app:layout_constraintTop_toBottomOf="@+id/cardImage" />
 
         <TextView
-            android:id="@+id/textView6"
-            android:layout_width="0dp"
+            android:id="@+id/textView1"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
+
+            android:gravity="start|center_horizontal"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/textView5"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textView11"
+            app:layout_constraintEnd_toStartOf="@+id/textView11"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView1"
+            app:layout_constraintTop_toTopOf="@+id/textView11" />
 
         <TextView
-            android:id="@+id/textView7"
-            android:layout_width="0dp"
+            android:id="@+id/textView11"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+
+            android:layout_marginTop="20dp"
             android:gravity="center|center_horizontal"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/textView6"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/textView6"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView1"
+            app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textView1"
+            app:layout_constraintEnd_toStartOf="@+id/textView1"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView1"
+            app:srcCompat="@drawable/arrow" />
+
+
+
+
 
         <TextView
-            android:id="@+id/textView5"
-            android:layout_width="0dp"
+            android:id="@+id/textView2"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
+
+            android:gravity="start|center_horizontal"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/textView4"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/textView4"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textView22"
+            app:layout_constraintEnd_toStartOf="@+id/textView22"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/textView22" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+            android:gravity="center|center_horizontal"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toStartOf="@+id/textView2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView2"
+            app:srcCompat="@drawable/arrow" />
+
+
+
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+
+            android:gravity="start|center_horizontal"
+            android:text="TextView"
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textView33"
+            app:layout_constraintEnd_toStartOf="@+id/textView33"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/textView33" />
+
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+            android:gravity="center|center_horizontal"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/textView22" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textView3"
+            app:layout_constraintEnd_toStartOf="@+id/textView3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView3"
+            app:srcCompat="@drawable/arrow" />
+
+
+
+
+
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
 
-            android:gravity="center|center_horizontal"
+            android:gravity="start|center_horizontal"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/cardTitle"
-            app:layout_constraintStart_toStartOf="@+id/cardTitle"
-            app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textView44"
+            app:layout_constraintEnd_toStartOf="@+id/textView44"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView4"
+            app:layout_constraintTop_toTopOf="@+id/textView44" />
 
         <TextView
-            android:id="@+id/textView8"
-            android:layout_width="0dp"
+            android:id="@+id/textView44"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:gravity="center"
-            android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/textView7"
-            app:layout_constraintHorizontal_bias="0.505"
-            app:layout_constraintStart_toStartOf="@+id/textView7"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
+            android:layout_marginTop="20dp"
+            android:gravity="center|center_horizontal"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/textView33" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textView4"
+            app:layout_constraintEnd_toStartOf="@+id/textView4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView4"
+            app:srcCompat="@drawable/arrow" />
+
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+
+            android:gravity="start|center_horizontal"
+            android:text="TextView"
+            android:textAlignment="viewStart"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textView55"
+            app:layout_constraintEnd_toStartOf="@+id/textView55"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imageView5"
+            app:layout_constraintTop_toTopOf="@+id/textView55" />
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            android:gravity="center|center_horizontal"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/textView44" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textView5"
+            app:layout_constraintEnd_toStartOf="@+id/textView5"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView5"
+            app:srcCompat="@drawable/arrow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
