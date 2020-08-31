@@ -45,7 +45,6 @@ class DeckActivity : AppCompatActivity() {
     }
 
     private fun setAlphas() {
-        val docRef = db.collection("Decks")
         var deck: Deck
         charItem!!.clear()
         db.collection("Users").document("${FirebaseAuth.getInstance().uid}")
@@ -53,17 +52,17 @@ class DeckActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document != null) {
                     val reference: ArrayList<DocumentReference> = document.get("decks") as ArrayList<DocumentReference>
-
                     reference.forEach{
-                        println("primo deck "+it)
                     it.get()
                         .addOnSuccessListener { document ->
                             if (document != null) {
-
                                 val alpha = document.get("alpha").toString()
                                 val icons = document.get("icons").toString()
                                 val id =document.id
-                                deck = Deck(id,icons,alpha)
+                                var description = document.get("description").toString()
+                                var price= document.get("price").toString()
+                                var premium= document.get("premium") as Boolean
+                                deck = Deck(id,icons,alpha,description,price,premium)
                                 if(deck!=null){
                                     charItem!!.add(deck)
                                     alphaAdapters = DeckAdapter(applicationContext, ArrayList(charItem!!))

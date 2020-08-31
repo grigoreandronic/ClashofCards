@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.unitn.clashofcards.R
@@ -35,6 +36,9 @@ class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
+        val options2: RequestOptions = RequestOptions()
+            .skipMemoryCache(true)
+            .centerInside()
         val options: RequestOptions = RequestOptions()
             .skipMemoryCache(true)
             .centerInside()
@@ -52,15 +56,40 @@ class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(true)
             dialog.setContentView(cardlayout)
-            dialog.getWindow()?.setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
 
             val cardimage = dialog.findViewById<ImageView>(R.id.cardImage)
-            val cardtext    = dialog.findViewById<TextView>(R.id.cardTitle)
-            cardtext.setText(holder.titles.text.toString())
+            val cardtext  = dialog.findViewById<TextView>(R.id.cardTitle)
+            var attributename1 = dialog.findViewById<TextView>(R.id.attributename1)
+            var attributevalue1 = dialog.findViewById<TextView>(R.id.attributevalue1)
+            var attributename2 = dialog.findViewById<TextView>(R.id.attributename2)
+            var attributevalue2 = dialog.findViewById<TextView>(R.id.attributevalue2)
+            var attributename3 = dialog.findViewById<TextView>(R.id.attributename3)
+            var attributevalue3 = dialog.findViewById<TextView>(R.id.attributevalue3)
+            var attributename4 = dialog.findViewById<TextView>(R.id.attributename4)
+            var attributevalue4 = dialog.findViewById<TextView>(R.id.attributevalue4)
+            var attributename5 = dialog.findViewById<TextView>(R.id.attributename5)
+            var attributevalue5 = dialog.findViewById<TextView>(R.id.attributevalue5)
+
+
+            cardtext.text=holder.titles.text.toString()
+             attributename1.text=charItem.attributename1!!
+             attributevalue1.text=charItem.attributevalue1!!
+             attributename2.text=charItem.attributename2!!
+             attributevalue2.text=charItem.attributevalue2!!
+             attributename3.text=charItem.attributename3!!
+             attributevalue3.text=charItem.attributevalue3!!
+             attributename4.text=charItem.attributename4!!
+             attributevalue4.text=charItem.attributevalue4!!
+             attributename5.text=charItem.attributename5!!
+             attributevalue5.text=charItem.attributevalue5!!
+
+
+
             Glide.with(context)
                 .load(charItem.icons)
-                .apply(options)
+                .apply(options2)
                 .into(cardimage)
             dialog.show()
         }
@@ -74,6 +103,8 @@ class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
 
         var icons = itemView.findViewById<ImageView>(R.id.icon_image_viewcards)
         var titles = itemView.findViewById<TextView>(R.id.title_text_viewcards)
+
+
 
     }
 }

@@ -46,7 +46,7 @@ class RegistrationActivity : AppCompatActivity() {
                 this,
                 DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                     // Display Selected date in TextView
-                    registration_birth_date.setText("" + dayOfMonth + "/" + month + "/" + year)
+                    registration_birth_date.text = "" + dayOfMonth + "/" + month + "/" + year
                 },
                 year,
                 month,
@@ -147,9 +147,9 @@ class RegistrationActivity : AppCompatActivity() {
         var toRef3: DocumentReference
 
         var Decks: ArrayList<DocumentReference> = ArrayList<DocumentReference>()
-        toRef=(db.collection("Decks").document("U15wO66e7lTXJ5W0jHDD"))
-        toRef2=(db.collection("Decks").document("5pB8d5qgUpVkAGBi7nt0"))
-        toRef3=(db.collection("Decks").document("mejeej8pDuQ70ePwTCH6"))
+        toRef=(db.collection("Decks").document("PWsCn4nYwXoUKcuVpKte"))
+        toRef2=(db.collection("Decks").document("Nisj8JYpUPDVHoSoYZt5"))
+        toRef3=(db.collection("Decks").document("IHNiiyfinzhvcbm5dyGk"))
 
         Decks.add(toRef)
         Decks.add(toRef2)

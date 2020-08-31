@@ -80,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signInFacebook() {
-        callbackManager = CallbackManager.Factory.create();
+        callbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance()
             .logInWithReadPermissions(this, listOf("email"))
         LoginManager.getInstance()
@@ -167,7 +167,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
             }
         } else{
-            callbackManager.onActivityResult(requestCode, resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data)
         }
 
     }
@@ -204,10 +204,9 @@ class LoginActivity : AppCompatActivity() {
         var toRef3: DocumentReference
 
         var decks: ArrayList<DocumentReference> = ArrayList<DocumentReference>()
-        toRef=(db.collection("Decks").document("U15wO66e7lTXJ5W0jHDD"))
-        toRef2=(db.collection("Decks").document("5pB8d5qgUpVkAGBi7nt0"))
-        toRef3=(db.collection("Decks").document("mejeej8pDuQ70ePwTCH6"))
-
+        toRef=(db.collection("Decks").document("fllx3SvX5OAzadvqaXWW"))
+        toRef2=(db.collection("Decks").document("E6d83e1TeKrng8NHJwh8"))
+        toRef3=(db.collection("Decks").document("GEJvXLmwz3E18Nooztww"))
         decks.add(toRef)
         decks.add(toRef2)
         decks.add(toRef3)

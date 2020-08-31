@@ -73,7 +73,7 @@ class MarketDeckActivity : AppCompatActivity() {
                         rootObject.put("price",price)
                         rootArray.put(rootObject)
                         rootObject = JSONObject()
-                        deck = Deck(id,icons, alpha,description,price,premium)
+                        deck = Deck(id,icons,alpha,description,price,premium)
                         if (deck != null) {
                             charItem!!.add(deck)
                             alphaAdapters = DeckMarketAdapter(applicationContext, ArrayList(charItem!!))
