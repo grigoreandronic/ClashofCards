@@ -147,9 +147,9 @@ class RegistrationActivity : AppCompatActivity() {
         var toRef3: DocumentReference
 
         var Decks: ArrayList<DocumentReference> = ArrayList<DocumentReference>()
-        toRef=(db.collection("Decks").document("PWsCn4nYwXoUKcuVpKte"))
-        toRef2=(db.collection("Decks").document("Nisj8JYpUPDVHoSoYZt5"))
-        toRef3=(db.collection("Decks").document("IHNiiyfinzhvcbm5dyGk"))
+        toRef=(db.collection("Decks").document("fllx3SvX5OAzadvqaXWW"))
+        toRef2=(db.collection("Decks").document("E6d83e1TeKrng8NHJwh8"))
+        toRef3=(db.collection("Decks").document("GEJvXLmwz3E18Nooztww"))
 
         Decks.add(toRef)
         Decks.add(toRef2)

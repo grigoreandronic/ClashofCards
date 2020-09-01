@@ -28,6 +28,9 @@
         <activity android:name=".MarketDeckActivity" />
         <activity android:name=".MarketDeckCardsActivity" />
         <activity android:name=".marketplace.CheckoutActivity" />
+        <activity android:name=".matcher.DeckSelection" />
+        <activity android:name=".matcher.WaitingActivity" />
+        <activity android:name=".matcher.GameActivity" />
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />

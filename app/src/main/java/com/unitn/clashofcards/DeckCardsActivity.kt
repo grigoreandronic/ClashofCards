@@ -65,6 +65,7 @@ class DeckCardsActivity : AppCompatActivity() {
                     var attributevalue5 = it.get("attributevalue5").toString()
                     var special = it.get("special") as Boolean
                     card = Card(id, icons, alpha, attributename1,attributevalue1,attributename2,attributevalue2, attributename3,attributevalue3, attributename4, attributevalue4, attributename5, attributevalue5, special)
+
                     if(card!=null){
                         charItem!!.add(card)
                         alphaAdapters = DeckCardsAdapter(applicationContext, ArrayList(charItem!!))
