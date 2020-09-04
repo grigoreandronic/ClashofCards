@@ -24,60 +24,60 @@ import org.json.JSONArray
 
 
 class DeckMarketAdapter(var context: Context, var arrayList: ArrayList<Deck>) :
-    RecyclerView.Adapter<DeckMarketAdapter.ItemHolder>() {
+  RecyclerView.Adapter<DeckMarketAdapter.ItemHolder>() {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
-        val viewHolder = LayoutInflater.from(parent.context)
-            .inflate(R.layout.grid_view_layout_marketdeck, parent, false)
-        return ItemHolder(viewHolder)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+    val viewHolder = LayoutInflater.from(parent.context)
+      .inflate(R.layout.grid_view_layout_marketdeck, parent, false)
+    return ItemHolder(viewHolder)
+  }
+
+  override fun getItemCount(): Int {
+    return arrayList.size
+  }
+
+  override fun onBindViewHolder(holder: ItemHolder, position: Int) {
+    val options: RequestOptions = RequestOptions()
+      .skipMemoryCache(true)
+      .centerInside()
+
+    val charItem: Deck = arrayList[position]
+    Glide.with(context)
+      .load(charItem.icons!!)
+      .apply(options)
+      .into(holder.icons)
+
+    holder.titles.text = charItem.alpha
+    holder.buy_button.text = "Buy"
+    holder.icons.setOnClickListener {
+      val intent = Intent(context, MarketDeckCardsActivity::class.java)
+      intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+      var id = arrayList.get(holder.layoutPosition)
+
+      intent.putExtra("idDeck","${id.id}")
+      context.startActivity(intent)
+    }
+    holder.titles.setOnClickListener {
+
+      Toast.makeText(context, holder.titles.text, Toast.LENGTH_LONG).show()
+    }
+    holder.buy_button.setOnClickListener{
+      var json = MyJSON()
+      json.setBuyItem(holder.layoutPosition)
+      val intent = Intent(context, CheckoutActivity::class.java)
+      intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+      var id = arrayList.get(holder.layoutPosition)
+      intent.putExtra("idDeck","${id.id}")
+      context.startActivity(intent)
     }
 
-    override fun getItemCount(): Int {
-        return arrayList.size
-    }
+  }
 
-    override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        val options: RequestOptions = RequestOptions()
-            .skipMemoryCache(true)
-            .centerInside()
+  class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val charItem: Deck = arrayList[position]
-        Glide.with(context)
-            .load(charItem.icons!!)
-            .apply(options)
-            .into(holder.icons)
-
-        holder.titles.text = charItem.alpha
-        holder.buy_button.text = "Buy"
-        holder.icons.setOnClickListener {
-            val intent = Intent(context, MarketDeckCardsActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            var id = arrayList.get(holder.layoutPosition)
-
-            intent.putExtra("idDeck","${id.id}")
-            context.startActivity(intent)
-        }
-        holder.titles.setOnClickListener {
-
-            Toast.makeText(context, holder.titles.text, Toast.LENGTH_LONG).show()
-        }
-        holder.buy_button.setOnClickListener{
-            var json = MyJSON()
-            json.setBuyItem(holder.layoutPosition)
-            val intent = Intent(context, CheckoutActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            var id = arrayList.get(holder.layoutPosition)
-            intent.putExtra("idDeck","${id.id}")
-            context.startActivity(intent)
-        }
-
-    }
-
-    class ItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var icons = itemView.findViewById<ImageView>(R.id.market_icon_image_view)
-        var titles = itemView.findViewById<TextView>(R.id.market_title_text_view)
-        var buy_button = itemView.findViewById<MaterialButton>(R.id.buy_button_deck)
-    }
+    var icons = itemView.findViewById<ImageView>(R.id.market_icon_image_view)
+    var titles = itemView.findViewById<TextView>(R.id.market_title_text_view)
+    var buy_button = itemView.findViewById<MaterialButton>(R.id.buy_button_deck)
+  }
 }

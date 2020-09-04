@@ -2,52 +2,44 @@ package com.unitn.clashofcards.matcher
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import bolts.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
-import com.unitn.clashofcards.LoginActivity
-import com.unitn.clashofcards.MarketDeckActivity
-import com.unitn.clashofcards.MyJSON
 import com.unitn.clashofcards.R
-import com.unitn.clashofcards.adapters.DeckAdapter
-import com.unitn.clashofcards.adapters.DeckCardsAdapter
-import com.unitn.clashofcards.adapters.DeckMarketAdapter
 import com.unitn.clashofcards.model.Card
 import com.unitn.clashofcards.model.Deck
 import com.unitn.clashofcards.model.GameRoom
-import org.json.JSONArray
-import org.json.JSONObject
 
-class WaitingActivity: AppCompatActivity() {
+class CreateGame  : AppCompatActivity() {
 
     val db = Firebase.firestore
 
     private var charItem: ArrayList<Card>? = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
 
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.waiting_activity)
-
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.waiting_activity)
 
         setAlphas()
 
-        var deck:Deck = Deck()
+        var deck: Deck = Deck()
         var docdeck = intent.getStringExtra("idDeck")
         createDoc()
-                }
+    }
+
+
+
+
+
+
+
+
 
 
     private  fun createDoc(){
@@ -63,80 +55,44 @@ class WaitingActivity: AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
 
-        var started=false
-        var d: ListenerRegistration? = null
-        d= db.collection("GameRoom").whereEqualTo("status", "online").whereEqualTo("deck", docdeck).limit(1)
+        println("document non esiste ne creo uno")
 
-            .addSnapshotListener { snapshot, e ->
-                if (snapshot != null) {
-
-                    snapshot.forEach {
+            var game: GameRoom = GameRoom(FirebaseAuth.getInstance().uid, "", docdeck, "online", "", "", "", "", "", "", "", "", "", "", "")
+            db.collection("GameRoom")
+                .add(game)
+                .addOnSuccessListener { doc ->
+////////////////////////////////////////start
+                    var started=false
+                    var d: ListenerRegistration? = null
+                     d= doc.addSnapshotListener { snapshot, e ->
                         if (e != null) {
                             Log.w("TAG", "Listen failed.", e)
                             return@addSnapshotListener
                         }
 
-                        if (snapshot != null && it.exists()) {
-                            val intent = Intent(this, GameActivity::class.java)
-                            db.runTransaction { transaction ->
-                                val snapshot = transaction.get(it.reference)
-                                intent.putExtra("Deck", docdeck)
-                                intent.putExtra("idRoom", it.id)
-                                intent.putExtra("uid", "uid2")
-                                transaction.update(it.reference, "uid2", FirebaseAuth.getInstance().uid)
-                                transaction.update(it.reference, "status", "ingame")
+                        if (snapshot != null && snapshot.exists()) {
 
-                                // Success
-                                null
-                            }.addOnSuccessListener {
+                            if(snapshot.get("status")=="ingame"){
+                                if(!started){
+                                val intent = Intent(this, GameActivity::class.java)
+                                intent.putExtra("Deck", docdeck)
+                                intent.putExtra("idRoom", doc.id)
+                                intent.putExtra("uid", "uid1")
                                 startActivity(intent)
                                 dialog.dismiss()
-                                d?.remove()
                                 finish()
+                                    d?.remove()
+                                }
                             }
-                                .addOnFailureListener { e -> Log.w("TAG", "Transaction failure.", e) }
-
                         } else {
                             Log.d("TAG", "Current data: null")
                         }
                     }
+
+
                 }
 
-            }
 
-
-
-            /*.get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    if(!created) {
-                        find = true
-                        println("document ${document.id} => ${document.data}")
-                        println("document esiste")
-                        val data = hashMapOf(
-                                "uid2" to FirebaseAuth.getInstance().uid,
-                                "status" to "ingame"
-                        )
-                                document.reference.set(data, SetOptions.merge())
-
-                        val intent = Intent(this, GameActivity::class.java)
-                        intent.putExtra("Deck", docdeck)
-                        intent.putExtra("idRoom", document.id)
-                        intent.putExtra("uid", "uid1")
-                        startActivity(intent)
-                        dialog.dismiss()
-                        finish()
-
-
-
-                    }
-
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("TAG", "Error getting documents: ", exception)
-            }
-*/
 
     }
 
@@ -190,4 +146,13 @@ class WaitingActivity: AppCompatActivity() {
 
     }
 
-    }
+
+
+
+
+
+
+
+
+
+}

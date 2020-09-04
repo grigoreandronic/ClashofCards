@@ -7,12 +7,12 @@ import kotlinx.android.parcel.Parcelize
 
 
 data class User(
-    var uid: String? = "",
-    var username: String? = "",
-    var name: String?= "",
-    var surname: String?= "",
-    var email: String? = "",
-    var password: String?= "",
-    var birthDate: String= "",
-    var Decks: ArrayList<DocumentReference> ? = null
+  var uid: String? = "",
+  var username: String? = "",
+  var name: String?= "",
+  var surname: String?= "",
+  var email: String? = "",
+  var password: String?= "",
+  var birthDate: String= "",
+  var Decks: ArrayList<DocumentReference> ? = null
 )

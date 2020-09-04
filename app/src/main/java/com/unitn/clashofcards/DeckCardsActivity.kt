@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import com.unitn.clashofcards.adapters.DeckAdapter
 import com.unitn.clashofcards.adapters.DeckCardsAdapter
@@ -26,6 +27,7 @@ class DeckCardsActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_deckcards)
@@ -38,12 +40,12 @@ class DeckCardsActivity : AppCompatActivity() {
         setAlphas()
 
 
+
     }
 
     private fun setAlphas() {
         var doc = intent.getStringExtra("idDeck")
         val docRef = db.collection("Decks").document(doc!!).collection("Cards")
-        var docRef2 = db.collection("Decks")
         var card: Card
         docRef.addSnapshotListener{  snapshot , e ->
             if(snapshot!=null ){

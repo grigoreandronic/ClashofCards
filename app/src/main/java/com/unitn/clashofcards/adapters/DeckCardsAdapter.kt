@@ -74,16 +74,16 @@ class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
 
 
             cardtext.text=holder.titles.text.toString()
-             attributename1.text=charItem.attributename1!!
-             attributevalue1.text=charItem.attributevalue1!!
-             attributename2.text=charItem.attributename2!!
-             attributevalue2.text=charItem.attributevalue2!!
-             attributename3.text=charItem.attributename3!!
-             attributevalue3.text=charItem.attributevalue3!!
-             attributename4.text=charItem.attributename4!!
-             attributevalue4.text=charItem.attributevalue4!!
-             attributename5.text=charItem.attributename5!!
-             attributevalue5.text=charItem.attributevalue5!!
+            attributename1.text=charItem.attributename1!!
+            attributevalue1.text=charItem.attributevalue1!!
+            attributename2.text=charItem.attributename2!!
+            attributevalue2.text=charItem.attributevalue2!!
+            attributename3.text=charItem.attributename3!!
+            attributevalue3.text=charItem.attributevalue3!!
+            attributename4.text=charItem.attributename4!!
+            attributevalue4.text=charItem.attributevalue4!!
+            attributename5.text=charItem.attributename5!!
+            attributevalue5.text=charItem.attributevalue5!!
 
 
 
