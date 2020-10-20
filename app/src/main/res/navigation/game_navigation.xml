@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_navigation"
+    app:startDestination="@id/gameFragment">
+
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.unitn.clashofcards.matcher.GameFragment"
+        android:label="fragment_game"
+        tools:layout="@layout/fragment_game" >
+        <action
+            android:id="@+id/action_gameFragment_to_turnResultFragment"
+            app:destination="@id/turnResultFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_gameResultFragment"
+            app:destination="@id/gameResultFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_setResultFragment"
+            app:destination="@id/setResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/turnResultFragment"
+        android:name="com.unitn.clashofcards.matcher.TurnResultFragment"
+        android:label="fragment_turn_result"
+        tools:layout="@layout/fragment_turn_result" >
+        <action
+            android:id="@+id/action_turnResultFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setResultFragment"
+        android:name="com.unitn.clashofcards.matcher.SetResultFragment"
+        android:label="fragment_set_result"
+        tools:layout="@layout/fragment_set_result" >
+        <action
+            android:id="@+id/action_setResultFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameResultFragment"
+        android:name="com.unitn.clashofcards.matcher.GameResultFragment"
+        android:label="fragment_game_result"
+        tools:layout="@layout/fragment_game_result" >
+        <action
+            android:id="@+id/action_gameResultFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+</navigation>

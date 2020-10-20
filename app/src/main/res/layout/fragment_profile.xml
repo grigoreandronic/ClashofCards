@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+
+    <View
+        android:id="@+id/base"
+        android:layout_width="357dp"
+        android:layout_height="378dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rounded_edittext_register_login"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.127" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/myCardView"
+        android:background="@drawable/circle_profile"
+        android:elevation="60dp"
+        app:layout_constraintBottom_toBottomOf="@+id/base"
+        app:layout_constraintEnd_toEndOf="@+id/base"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/base"
+        app:layout_constraintTop_toTopOf="@+id/base"
+        app:layout_constraintVertical_bias="0.205"
+        android:layout_height="232dp"
+        android:layout_width="232dp"
+        app:cardPreventCornerOverlap="false"
+        >
+        <ImageView
+            android:id="@+id/roundedimag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            />
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:id="@+id/level"
+        android:layout_width="360dp"
+        android:layout_height="93dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/rounded_edittext_register_login"
+        android:elevation="44dp"
+        app:layout_constraintEnd_toEndOf="@+id/base"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="@+id/base"
+        app:layout_constraintTop_toBottomOf="@+id/base" />
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/bold"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/myCardView"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/myCardView"
+        app:layout_constraintTop_toBottomOf="@+id/myCardView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

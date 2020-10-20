@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"><![CDATA[
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="216dp">
+
+
+
+
+
+
+    ]]>
+
+    <TextView
+        android:id="@+id/dialoginfo"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Title Text"
+        android:textAllCaps="true"
+        android:textAppearance="@style/permalink"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/setimagebackground"
+        app:layout_constraintEnd_toEndOf="@+id/setimagebackground"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/setimagebackground"
+        app:layout_constraintTop_toTopOf="@+id/setimagebackground" />
+
+    <ImageView
+        android:id="@+id/setimagebackground"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

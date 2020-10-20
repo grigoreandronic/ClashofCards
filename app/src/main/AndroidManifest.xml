@@ -32,6 +32,9 @@
     <activity android:name=".matcher.WaitingActivity" />
     <activity android:name=".matcher.GameActivity" />
     <activity android:name=".matcher.CreateGame" />
+    <activity android:name=".matcher.GameActivityFunction" />
+    <activity android:name=".matcher.GameFragmentActivity" />
+
     <meta-data
         android:name="com.google.android.gms.wallet.api.enabled"
         android:value="true" />

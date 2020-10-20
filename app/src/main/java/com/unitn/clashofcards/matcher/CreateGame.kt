@@ -19,7 +19,7 @@ import com.unitn.clashofcards.model.GameRoom
 class CreateGame  : AppCompatActivity() {
 
     val db = Firebase.firestore
-
+    var deckcard : DeckGame = DeckGame()
     private var charItem: ArrayList<Card>? = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -55,9 +55,8 @@ class CreateGame  : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
 
-        println("document non esiste ne creo uno")
 
-            var game: GameRoom = GameRoom(FirebaseAuth.getInstance().uid, "", docdeck, "online", "", "", "", "", "", "", "", "", "", "", "")
+            var game: GameRoom = GameRoom(FirebaseAuth.getInstance().uid, "", docdeck, "online",(deckcard.getDeckSize()).toString(),(deckcard.getDeckSize()).toString(),(deckcard.getDeckSize()).toString() ,"", "", "", "", "", "", "", "", "", "", "","","","","","","","","")
             db.collection("GameRoom")
                 .add(game)
                 .addOnSuccessListener { doc ->
@@ -74,11 +73,11 @@ class CreateGame  : AppCompatActivity() {
 
                             if(snapshot.get("status")=="ingame"){
                                 if(!started){
-                                val intent = Intent(this, GameActivity::class.java)
-                                intent.putExtra("Deck", docdeck)
-                                intent.putExtra("idRoom", doc.id)
-                                intent.putExtra("uid", "uid1")
-                                startActivity(intent)
+                                val intent = Intent(this, GameActivityFunction::class.java)
+                                    deckcard.setGameRoom(doc.id)
+                                    deckcard.setuid("uid1")
+                                    deckcard.setuidopponet("uid2")
+                                    startActivity(intent)
                                 dialog.dismiss()
                                 finish()
                                     d?.remove()

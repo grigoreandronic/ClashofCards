@@ -21,13 +21,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.unitn.clashofcards.databinding.ActivityLoginBinding
 import com.unitn.clashofcards.feature.onboarding.OnBoardingActivity
 import com.unitn.clashofcards.model.User
 import java.util.ArrayList
@@ -40,11 +40,12 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var callbackManager: CallbackManager
     val db = Firebase.firestore
-
+    private lateinit var account:Any
+    private lateinit var binding : ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
+        binding=ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val login_button_login    = findViewById<Button>(R.id.login_button_login)
         val email     = findViewById<TextView>(R.id.edit_login_email)
         val password = findViewById<TextView>(R.id.edit_login_password)
@@ -54,27 +55,19 @@ class LoginActivity : AppCompatActivity() {
 
 
         configureGoogleSignIn()
-        google_button.setOnClickListener {
+        binding.googleButtonLogin.setOnClickListener {
             signIn()
         }
-        facebook_button.setOnClickListener {
+        binding.facebookButtonLogin.setOnClickListener {
             signInFacebook()
         }
-
-
-
-
-
-        login_button_login.setOnClickListener {
+        binding.loginButtonLogin.setOnClickListener {
             performLogin(email.text.toString(), password.text.toString())
         }
 
-
-
-         findViewById<TextView>(R.id.login_sign_in).setOnClickListener {
+        binding.loginSignUp.setOnClickListener {
              val intent = Intent(this, RegistrationActivity::class.java)
              startActivity(intent)
-
          }
 
     }
@@ -159,22 +152,28 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                val account : GoogleSignInAccount? =task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account!!)
+                // Google Sign In was successful, authenticate with Firebase
+                 account = task.getResult(ApiException::class.java)!!
+                Log.d("TAG", "firebaseAuthWithGoogle:" + (account as GoogleSignInAccount).id)
+                firebaseAuthWithGoogle((account as GoogleSignInAccount).idToken!!)
             } catch (e: ApiException) {
-                Toast.makeText(this, "Google sign in failed:(", Toast.LENGTH_LONG).show()
+                // Google Sign In failed, update UI appropriately
+                Log.w("TAG", "Google sign in failed", e)
+                // ...
             }
-        } else{
+        }
+        else{
             callbackManager.onActivityResult(requestCode, resultCode, data)
         }
 
     }
+    
 
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+    private fun firebaseAuthWithGoogle(acct: String) {
 
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        val credential = GoogleAuthProvider.getCredential((account as GoogleSignInAccount).idToken!!, null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {
 
             if (it.isSuccessful) {

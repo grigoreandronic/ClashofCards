@@ -34,7 +34,7 @@ import org.json.JSONObject
 class WaitingActivity: AppCompatActivity() {
 
     val db = Firebase.firestore
-
+    var deckcard : DeckGame = DeckGame()
     private var charItem: ArrayList<Card>? = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -77,18 +77,19 @@ class WaitingActivity: AppCompatActivity() {
                         }
 
                         if (snapshot != null && it.exists()) {
-                            val intent = Intent(this, GameActivity::class.java)
+                            val intent = Intent(this, GameActivityFunction::class.java)
                             db.runTransaction { transaction ->
                                 val snapshot = transaction.get(it.reference)
-                                intent.putExtra("Deck", docdeck)
-                                intent.putExtra("idRoom", it.id)
-                                intent.putExtra("uid", "uid2")
+                                deckcard.setGameRoom(it.id)
+                                deckcard.setuid("uid2")
+                                deckcard.setuidopponet("uid1")
                                 transaction.update(it.reference, "uid2", FirebaseAuth.getInstance().uid)
                                 transaction.update(it.reference, "status", "ingame")
 
                                 // Success
                                 null
                             }.addOnSuccessListener {
+
                                 startActivity(intent)
                                 dialog.dismiss()
                                 d?.remove()

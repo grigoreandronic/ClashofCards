@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="false">
+    android:clickable="false"
+    android:visibility="visible">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/lower"
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/orange"
         android:text="@string/lower"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.736"
@@ -24,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/cardborder"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +34,7 @@
 
 
         <ImageView
-            android:id="@+id/view_container"
+            android:id="@+id/view_container1"
             android:layout_width="280dp"
             android:layout_height="30dp"
             android:foregroundGravity="center"
@@ -47,10 +50,10 @@
             android:layout_height="30dp"
             android:layout_marginTop="7dp"
             android:foregroundGravity="center"
-            app:layout_constraintEnd_toEndOf="@+id/view_container"
+            app:layout_constraintEnd_toEndOf="@+id/view_container1"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view_container"
-            app:layout_constraintTop_toBottomOf="@+id/view_container" />
+            app:layout_constraintStart_toStartOf="@+id/view_container1"
+            app:layout_constraintTop_toBottomOf="@+id/view_container1" />
 
         <ImageView
             android:id="@+id/view_container3"
@@ -99,13 +102,13 @@
             android:foregroundGravity="center_vertical|clip_horizontal|center"
             android:scaleType="centerInside"
             android:src="@drawable/letter_a"
-            app:layout_constraintBottom_toTopOf="@+id/cardTitle"
+            app:layout_constraintBottom_toTopOf="@+id/cardTitleGame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/cardTitle"
+            android:id="@+id/cardTitleGame"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -150,7 +153,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/attributename1"
-            app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/cardTitleGame" />
 
         <ImageView
             android:id="@+id/imageView1"
@@ -366,6 +369,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/orange"
         android:text="@string/greater"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.292"
@@ -379,10 +383,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Title Text"
+        android:text="Title Text2"
         android:textAllCaps="true"
         android:textAppearance="@style/permalink"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/cardLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"

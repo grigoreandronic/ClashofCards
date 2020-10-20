@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android" tools:ignore="ExtraText">
+    <!-- drawable/base.xml -->
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        android:width="375dp"
+        android:height="496dp"
+        android:viewportWidth="375"
+        android:viewportHeight="496"
+        android:fillColor="#FFFFFF"
+
+</selector>

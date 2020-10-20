@@ -11,13 +11,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.unitn.clashofcards.R
 import com.unitn.clashofcards.model.Card
 import com.unitn.clashofcards.R.layout.cardlayout
-import com.unitn.clashofcards.model.Deck
 
 
 class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
@@ -60,7 +57,7 @@ class DeckCardsAdapter(var context: Context, var arrayList: ArrayList<Card>) :
 
 
             val cardimage = dialog.findViewById<ImageView>(R.id.cardImage)
-            val cardtext  = dialog.findViewById<TextView>(R.id.cardTitle)
+            val cardtext  = dialog.findViewById<TextView>(R.id.cardTitleGame)
             var attributename1 = dialog.findViewById<TextView>(R.id.attributename1)
             var attributevalue1 = dialog.findViewById<TextView>(R.id.attributevalue1)
             var attributename2 = dialog.findViewById<TextView>(R.id.attributename2)

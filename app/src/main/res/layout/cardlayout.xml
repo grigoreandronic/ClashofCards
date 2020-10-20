@@ -37,13 +37,13 @@
             android:foregroundGravity="center_vertical|clip_horizontal|center"
             android:scaleType="centerInside"
             android:src="@drawable/letter_a"
-            app:layout_constraintBottom_toTopOf="@+id/cardTitle"
+            app:layout_constraintBottom_toTopOf="@+id/cardTitleGame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/cardTitle"
+            android:id="@+id/cardTitleGame"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -84,7 +84,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/attributename1"
-            app:layout_constraintTop_toBottomOf="@+id/cardTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/cardTitleGame" />
 
         <ImageView
             android:id="@+id/imageView1"
