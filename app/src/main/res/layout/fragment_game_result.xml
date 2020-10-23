@@ -14,66 +14,15 @@
         tools:layout_editor_absoluteY="216dp">
 
 
-        <ImageView
-            android:id="@+id/setimagebackground"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <ImageView
-            android:id="@+id/set1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/set2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/setimagebackground"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.184" />
-
-        <ImageView
-            android:id="@+id/set2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            app:layout_constraintBottom_toBottomOf="@+id/setimagebackground"
-            app:layout_constraintEnd_toStartOf="@+id/set3"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/set1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.184" />
-
-
-        <ImageView
-            android:id="@+id/set3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/setimagebackground"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/set2"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.184" />
-
         <TextView
             android:id="@+id/gamewinner"
-            android:layout_width="200dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="36dp"
-            android:gravity="center"
-            android:text="Title Text"
-            android:textAllCaps="true"
-            android:textAppearance="@style/permalink"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/set3"
-            app:layout_constraintStart_toStartOf="@+id/set1"
-            app:layout_constraintTop_toBottomOf="@+id/set2" />
+            android:layout_width="268dp"
+            android:layout_height="81dp"
+            android:foregroundGravity="center_vertical|center|center_horizontal"
+            android:gravity="center|center_horizontal|center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -20,6 +20,7 @@ class CreateGame  : AppCompatActivity() {
 
     val db = Firebase.firestore
     var deckcard : DeckGame = DeckGame()
+    var size =0
     private var charItem: ArrayList<Card>? = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -46,17 +47,10 @@ class CreateGame  : AppCompatActivity() {
         var find=false
         var created =false
         var docdeck = intent.getStringExtra("idDeck")
-        val builder = AlertDialog.Builder(this)
-        val dialogView = layoutInflater.inflate(R.layout.progress_dialog,null)
-        val message = dialogView.findViewById<TextView>(R.id.message)
-        message.text = "Waiting for an opponent..."
-        builder.setView(dialogView)
-        builder.setCancelable(false)
-        val dialog = builder.create()
-        dialog.show()
 
 
-            var game: GameRoom = GameRoom(FirebaseAuth.getInstance().uid, "", docdeck, "online",(deckcard.getDeckSize()).toString(),(deckcard.getDeckSize()).toString(),(deckcard.getDeckSize()).toString() ,"", "", "", "", "", "", "", "", "", "", "","","","","","","","","")
+
+            var game: GameRoom = GameRoom(FirebaseAuth.getInstance().uid, "", docdeck, "online",(deckcard.getDeckSize()).toString(),(deckcard.getDeckSize()).toString(),(deckcard.getDeckSize()).toString() ,"", "", "", "", "", "", "", "", "", "", "","","","","","0","0","0","0")
             db.collection("GameRoom")
                 .add(game)
                 .addOnSuccessListener { doc ->
@@ -78,7 +72,6 @@ class CreateGame  : AppCompatActivity() {
                                     deckcard.setuid("uid1")
                                     deckcard.setuidopponet("uid2")
                                     startActivity(intent)
-                                dialog.dismiss()
                                 finish()
                                     d?.remove()
                                 }
@@ -108,6 +101,7 @@ class CreateGame  : AppCompatActivity() {
         val docRef = db.collection("Decks").document(doc!!).collection("Cards")
         var card: Card
         var DeckGame: DeckGame= DeckGame()
+
         docRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val document = task.result
@@ -131,8 +125,11 @@ class CreateGame  : AppCompatActivity() {
                         card = Card(id, icons, alpha, attributename1,attributevalue1,attributename2,attributevalue2, attributename3,attributevalue3, attributename4, attributevalue4, attributename5, attributevalue5, special)
 
                         if(card!=null){
+                            size++
                             charItem!!.add(card)
-                            DeckGame.setArray(charItem!!)
+
+                            DeckGame.setArray(charItem!!,size)
+
                         }
                     }
                 } else {

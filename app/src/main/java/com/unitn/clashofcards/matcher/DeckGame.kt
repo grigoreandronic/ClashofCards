@@ -47,13 +47,13 @@ class DeckGame {
         return uidopponent
     }
 
-    fun setArray( array: ArrayList<Card>) {
+    fun setArray( array: ArrayList<Card>, _size: Int) {
         deck = array
-        size = array.size
+        size = _size
     }
 
-    fun getArray(): ArrayList<Card> {
-        return deck
+    fun getArray(): List<Card> {
+        return deck.filterNotNull()
     }
 
 }

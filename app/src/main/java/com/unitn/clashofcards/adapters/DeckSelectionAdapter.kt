@@ -50,6 +50,7 @@ class DeckSelectionAdapter(var context: Context, var arrayList: ArrayList<Deck>)
     holder.titles.text = charItem.alpha
 
     holder.icons.setOnClickListener {
+
       var dialog = Dialog(context)
       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
       dialog.setCancelable(true)
@@ -72,6 +73,7 @@ class DeckSelectionAdapter(var context: Context, var arrayList: ArrayList<Deck>)
         var id = arrayList.get(holder.layoutPosition)
         dialog.dismiss()
         intent.putExtra("idDeck","${id.id}")
+
         context.startActivity(intent)
       }
 

@@ -2,6 +2,7 @@ package com.unitn.clashofcards.matcher
 
 import android.app.Dialog
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -41,36 +42,42 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
     // [START declare_database_ref]
     val firestore = Firebase.firestore
     var deckcard: DeckGame = DeckGame()
-    private var charItem: MutableList<Card>? = deckcard.getArray()
-    var decksize = deckcard.getDeckSize()
-    var decksizeopponent = deckcard.getDeckSize()
+    private var charItem: MutableList<Card>? = deckcard.getArray().toMutableList()
     val db = Firebase.firestore
     var card: Card = Card()
     var turnplay = ""
     var valueSelected: String = ""
-    var rnds: Int = 0
-    var numberofturn = 0
+
     var idRoom: String = ""
     var uid: String = ""
     var uidopponent: String = ""
     var d: ListenerRegistration? = null
-    var currentTurn = ""
-    var currentMove = ""
-    var previousTurn = ""
-    var setwin = 0
-    var setlost = 0
     var mLastClickTime: Long = 0
-    var case = ""
+    var progres : Int =0
+    var turn =0
+    var firstime = true
+    var move = false
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         binding = ActivityIngameBinding.inflate(layoutInflater)
         val rootView = binding.root
         setContentView(rootView)
+        charItem!!.addAll(deckcard.getArray().toMutableList())
+        setAnimation()
+
+        var data=
+            hashMapOf(
+                "decksize" to (deckcard.getDeckSize()).toString(),
+                "uid1decksize" to (deckcard.getDeckSize()).toString(),
+                "uid2decksize" to (deckcard.getDeckSize()).toString()
+            )
+        setFieldValueStart(data)
         setGameBase()
         setPlayingCard()
         listenDB()
         binding.greater.setOnClickListener {
+            binding.greater.visibility=View.INVISIBLE
+            binding.lower.visibility=View.INVISIBLE
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
@@ -86,6 +93,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         }
 
         binding.lower.setOnClickListener {
+            binding.greater.visibility=View.INVISIBLE
+            binding.lower.visibility=View.INVISIBLE
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
@@ -103,7 +112,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
 
     private fun listenDB() {
         val docRef = db.collection("GameRoom").document(idRoom)
-        docRef.addSnapshotListener { snapshot, e ->
+        d=docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
@@ -117,135 +126,162 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                     setTurn(false)
                 }
                 if (uid == "uid1") {
-                    if (snapshot.get("uid1move") == "gamewin") {
+                    if (snapshot.get("uid1move") == "gamewin" && !move) {
+                        move=true
+                        var data =
+                            hashMapOf(
+                                "uid1move" to ""
+                            )
+                        setFieldValue(data)
                         createDialogGame(true)
+
+                    } else if ((snapshot.get("uid1move") == "setwin") && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid1move") == "setwin")) {
                         createDialogSet(true)
+
+                    } else if ((snapshot.get("uid1move") == "turnwinswitch") && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid1move") == "turnwinswitch")) {
+                        createDialogTurnSwitch(true)
+
+                    } else if ((snapshot.get("uid1move") == "turnwin") && !move) {
+                        move=true
+
+                        var data =
+                            hashMapOf(
+                                "uid1move" to ""
+                            )
+                        setFieldValue(data)
                         createDialogTurn(true)
+                    } else if ((snapshot.get("uid1move") == "turnlost") && !move) {
+                        move=true
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid1move") == "turnwin")) {
-                        createDialogTurn(true)
-                        var data =
-                            hashMapOf(
-                                "uid1move" to ""
-                            )
-                        setFieldValue(data)
-                    } else if ((snapshot.get("uid1move") == "turnlost")) {
                         createDialogTurn(false)
+                    } else if (snapshot.get("uid1move") == "gamelost" && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
                             )
                         setFieldValue(data)
-                    } else if (snapshot.get("uid1move") == "gamelost") {
                         createDialogGame(false)
+
+                    } else if ((snapshot.get("uid1move") == "setlost") && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid1move") == "setlost")) {
                         createDialogSet(false)
+
+                    } else if ((snapshot.get("uid1move") == "turnlostswitch") && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid1move") == "turnlostswitch")) {
-                        createDialogTurn(false)
-                        var data =
-                            hashMapOf(
-                                "uid1move" to ""
-                            )
-                        setFieldValue(data)
-                    } else if ((snapshot.get("uid1move") == "turnlost")) {
-                        createDialogTurn(false)
-                        var data =
-                            hashMapOf(
-                                "uid1move" to ""
-                            )
-                        setFieldValue(data)
+                        createDialogTurnSwitch(false)
+
                     }
 
                 } else if (uid == "uid2") {
-                    if (snapshot.get("uid2move") == "gamewin") {
+                    if (snapshot.get("uid2move") == "gamewin" && !move) {
+                        move=true
+
+                        var data =
+                            hashMapOf(
+                                "uid2move" to ""
+                            )
+                        setFieldValue(data)
                         createDialogGame(true)
+
+                    } else if ((snapshot.get("uid2move") == "setwin") && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid2move") == "setwin")) {
                         createDialogSet(true)
+
+                    } else if ((snapshot.get("uid2move") == "turnwinswitch") && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid2move") == "turnwinswitch")) {
+                        createDialogTurnSwitch(true)
+
+                    } else if ((snapshot.get("uid2move") == "turnwin") && !move) {
+                        move=true
+
+                        var data =
+                            hashMapOf(
+                                "uid2move" to ""
+                            )
+                        setFieldValue(data)
                         createDialogTurn(true)
+
+                    } else if ((snapshot.get("uid2move") == "turnlost") && !move) {
+                        move=true
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid2move") == "turnwin")) {
-                        createDialogTurn(true)
-                        var data =
-                            hashMapOf(
-                                "uid2move" to ""
-                            )
-                        setFieldValue(data)
-                    } else if ((snapshot.get("uid2move") == "turnlost")) {
                         createDialogTurn(false)
+
+                    } else if (snapshot.get("uid2move") == "gamelost" && !move) {
+                        move=true
+
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
                             )
                         setFieldValue(data)
-                    } else if (snapshot.get("uid2move") == "gamelost") {
                         createDialogGame(false)
+
+                    } else if ((snapshot.get("uid2move") == "setlost") && !move) {
+                        move=true
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid2move") == "setlost")) {
                         createDialogSet(false)
+
+                    } else if ((snapshot.get("uid2move") == "turnlostswitch") && !move) {
+                        move=true
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
                             )
                         setFieldValue(data)
-                    } else if ((snapshot.get("uid2move") == "turnlostswitch")) {
-                        createDialogTurn(false)
-                        var data =
-                            hashMapOf(
-                                "uid2move" to ""
-                            )
-                        setFieldValue(data)
-                    } else if ((snapshot.get("uid2move") == "turnlost")) {
-                        createDialogTurn(false)
-                        var data =
-                            hashMapOf(
-                                "uid2move" to ""
-                            )
-                        setFieldValue(data)
+                        createDialogTurnSwitch(false)
+
                     }
 
                 }
@@ -255,15 +291,23 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         }
     }
 
-    private fun setTurn(turn: Boolean) {
-        if (turn) {
-            binding.turntext.text = "YOUR TURN"
-            binding.greater.visibility = View.VISIBLE
-            binding.lower.visibility = View.VISIBLE
+    private fun setTurn(_turn: Boolean) {
+        if (_turn) {
+            turn = 1
+            if(!firstime) {
+                binding.turntext.text = "YOUR TURN"
+                binding.turntext.visibility = View.VISIBLE
+                binding.greater.visibility = View.VISIBLE
+                binding.lower.visibility = View.VISIBLE
+            }
         } else {
-            binding.turntext.text = "OPPONENT TURN"
-            binding.greater.visibility = View.INVISIBLE
-            binding.lower.visibility = View.INVISIBLE
+            turn = 2
+            if(!firstime) {
+                binding.turntext.text = "OPPONENT TURN"
+                binding.turntext.visibility = View.VISIBLE
+                binding.greater.visibility = View.INVISIBLE
+                binding.lower.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -397,18 +441,22 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         Thread.MAX_PRIORITY
         var dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
+        dialog.setCancelable(false)
         dialog.setContentView(R.layout.fragment_set_result)
         if (win) {
             dialog.dialoginfo.text = "YOU WIN THE SET"
+            charItem!!.addAll(deckcard.getArray().toMutableList())
         } else {
             dialog.dialoginfo.text = "YOU LOST THE SET"
+            charItem!!.addAll(deckcard.getArray().toMutableList())
         }
         dialog.show()
         //dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         Handler(Looper.getMainLooper()).postDelayed({
             dialog.dismiss()
-        }, 3000)
+            move=false
+            setPlayingCard()
+        }, 4000)
 
 
     }
@@ -417,20 +465,53 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
     private fun createDialogTurn(win: Boolean) {
         var dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
+        dialog.setCancelable(false)
         dialog.setContentView(R.layout.fragment_turn_result)
         if (win) {
             dialog.turnwinner.text = "YOU WIN THE TURN"
-
         } else {
+
             dialog.turnwinner.text = "YOU LOST THE TURN"
+            charItem!!.remove(card)
+            Handler(Looper.getMainLooper()).postDelayed({
+                setPlayingCard()
+            }, 1000)
+
         }
         dialog.show()
 
         //dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         Handler(Looper.getMainLooper()).postDelayed({
             dialog.dismiss()
-        }, 3000)
+            move=false
+        }, 4000)
+
+
+    }
+
+    private fun createDialogTurnSwitch(win: Boolean) {
+        var dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.fragment_turn_result)
+        if (win) {
+            dialog.turnwinner.text = "YOU WIN THE TURN "
+            setPlayingCard()
+        } else {
+
+            dialog.turnwinner.text = "YOU LOST THE TURN"
+            charItem!!.remove(card)
+            Handler(Looper.getMainLooper()).postDelayed({
+                setPlayingCard()
+            }, 1000)
+        }
+        dialog.show()
+
+        //dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        Handler(Looper.getMainLooper()).postDelayed({
+            dialog.dismiss()
+            move=false
+        }, 4000)
 
 
     }
@@ -439,7 +520,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         Thread.MAX_PRIORITY
         var dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(true)
+        dialog.setCancelable(false)
         dialog.setContentView(R.layout.fragment_game_result)
         if (win) {
             dialog.gamewinner.text = "YOU WIN THE GAME"
@@ -452,65 +533,74 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         Handler(Looper.getMainLooper()).postDelayed({
             dialog.dismiss()
             finish()
-        }, 3000)
+        }, 4000)
 
 
     }
 
 
-    private suspend fun getField(field: String)
-            : String {
-        return try {
-            val data = firestore
-                .collection("GameRoom")
-                .document(idRoom)
-                .get()
-                .await()
-            return data.get(field) as String
-        } catch (e: Exception) {
-            e.toString()
+    private fun setFieldValueStart(hashMap: HashMap<String, String>) {
+
+        val docRef = db.collection("GameRoom").document(deckcard.getGameRoom())
+        val data = firestore.runTransaction {
+            val snapshot = it.get(docRef)
+            turnplay = snapshot.getString("turn")!!
+            it.update(docRef, hashMap as Map<String, Any>)
         }
+
+
     }
-
-    private suspend fun getFieldConfr(field: String)
-            : String {
-        return try {
-            val value1 = uid + valueSelected
-            var value2 = ""
-            value2 = if (uid == "uid1") {
-                "uid2" + valueSelected
-            } else {
-                "uid1" + valueSelected
-            }
-            val data = firestore
-                .collection("GameRoom")
-                .document(idRoom)
-                .get()
-                .await()
-            if (field == "1") {
-                val value = (data.get(value1) as String)
-                return value
-            } else {
-                val value = (data.get(value2) as String)
-                return value
-            }
-        } catch (e: Exception) {
-            e.toString()
-        }
-    }
-
-
     private fun setFieldValue(hashMap: HashMap<String, String>) {
 
-        val sfDocRef = db.collection("GameRoom").document(deckcard.getGameRoom())
+        val docRef = db.collection("GameRoom").document(deckcard.getGameRoom())
         val data = firestore.runTransaction {
-            val snapshot = it.get(sfDocRef)
+            val snapshot = it.get(docRef)
             turnplay = snapshot.getString("turn")!!
-            it.update(sfDocRef, hashMap as Map<String, Any>)
+            it.update(docRef, hashMap as Map<String, Any>)
         }
+
 
     }
 
+    private fun setAnimation(){
+        binding.watchProgress.playAnimation()
+        binding.watchProgress.addAnimatorUpdateListener { valueAnimator ->
+            // Set animation progress
+            progres = (valueAnimator.animatedValue as Float * 100).toInt()
+            if(progres==99 && turn==1){
+                binding.watchProgress.cancelAnimation()
+                binding.watchProgress.visibility=View.GONE
+                binding.waitingtext3.text="YOUR TURN"
+
+                binding.waitingtext3.visibility=View.VISIBLE
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.waitingtext3.visibility=View.INVISIBLE
+                    binding.turntext.text = "YOUR TURN"
+                    binding.turntext.visibility = View.VISIBLE
+                    binding.greater.visibility = View.VISIBLE
+                    binding.lower.visibility = View.VISIBLE
+                    binding.cardLayout.visibility = View.VISIBLE
+                    firstime=false
+                }, 2000)
+            }else if(progres==99 && turn==2) {
+                binding.watchProgress.cancelAnimation()
+                binding.watchProgress.visibility=View.INVISIBLE
+                binding.waitingtext3.text="OPPONENT TURN"
+                binding.waitingtext3.visibility=View.VISIBLE
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.waitingtext3.visibility=View.GONE
+                    binding.turntext.text = "OPPONENT TURN"
+                    binding.turntext.visibility = View.VISIBLE
+                    binding.greater.visibility = View.INVISIBLE
+                    binding.lower.visibility = View.INVISIBLE
+                    binding.cardLayout.visibility = View.VISIBLE
+                    firstime=false
+                }, 2000)
+
+            }
+
+        }
+    }
 
 
 
