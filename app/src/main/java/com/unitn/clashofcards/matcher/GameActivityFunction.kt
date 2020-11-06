@@ -10,6 +10,7 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -53,10 +54,11 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
     var uidopponent: String = ""
     var d: ListenerRegistration? = null
     var mLastClickTime: Long = 0
-    var progres : Int =0
-    var turn =0
+    var progres: Int = 0
+    var turn = 0
     var firstime = true
     var move = false
+    var decksize=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIngameBinding.inflate(layoutInflater)
@@ -64,8 +66,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         setContentView(rootView)
         charItem!!.addAll(deckcard.getArray().toMutableList())
         setAnimation()
-
-        var data=
+        var data =
             hashMapOf(
                 "decksize" to (deckcard.getDeckSize()).toString(),
                 "uid1decksize" to (deckcard.getDeckSize()).toString(),
@@ -76,8 +77,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         setPlayingCard()
         listenDB()
         binding.greater.setOnClickListener {
-            binding.greater.visibility=View.INVISIBLE
-            binding.lower.visibility=View.INVISIBLE
+            binding.greater.visibility = View.INVISIBLE
+            binding.lower.visibility = View.INVISIBLE
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
@@ -85,7 +86,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             var data =
                 hashMapOf(
                     "operation" to "greater",
-                    "valueselected" to uid+valueSelected
+                    "valueselected" to uid + valueSelected
                 )
 
             setFieldValue(data)
@@ -93,8 +94,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         }
 
         binding.lower.setOnClickListener {
-            binding.greater.visibility=View.INVISIBLE
-            binding.lower.visibility=View.INVISIBLE
+            binding.greater.visibility = View.INVISIBLE
+            binding.lower.visibility = View.INVISIBLE
             if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                 return@setOnClickListener
             }
@@ -102,7 +103,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             var data =
                 hashMapOf(
                     "operation" to "lower",
-                    "valueselected" to uid+valueSelected
+                    "valueselected" to uid + valueSelected
                 )
             setFieldValue(data)
 
@@ -112,22 +113,25 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
 
     private fun listenDB() {
         val docRef = db.collection("GameRoom").document(idRoom)
-        d=docRef.addSnapshotListener { snapshot, e ->
+        d = docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
             }
 
             if (snapshot != null && snapshot.exists()) {
+
                 if (snapshot.get("turn") == uid) {
+
                     setTurn(true)
 
                 } else if (snapshot.get("turn") == uidopponent) {
                     setTurn(false)
                 }
                 if (uid == "uid1") {
+                    decksize= snapshot.get("uid1decksize").toString()
                     if (snapshot.get("uid1move") == "gamewin" && !move) {
-                        move=true
+                        move = true
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
@@ -136,8 +140,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogGame(true)
 
                     } else if ((snapshot.get("uid1move") == "setwin") && !move) {
-                        move=true
-
+                        move = true
+                        decksize= snapshot.get("uid1decksize").toString()
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
@@ -146,8 +150,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogSet(true)
 
                     } else if ((snapshot.get("uid1move") == "turnwinswitch") && !move) {
-                        move=true
-
+                        move = true
+                        decksize= snapshot.get("uid1decksize").toString()
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
@@ -156,8 +160,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogTurnSwitch(true)
 
                     } else if ((snapshot.get("uid1move") == "turnwin") && !move) {
-                        move=true
-
+                        move = true
+                        decksize= snapshot.get("uid1decksize").toString()
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
@@ -165,7 +169,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         setFieldValue(data)
                         createDialogTurn(true)
                     } else if ((snapshot.get("uid1move") == "turnlost") && !move) {
-                        move=true
+                        move = true
+                        decksize= snapshot.get("uid1decksize").toString()
                         var data =
                             hashMapOf(
                                 "uid1move" to ""
@@ -173,7 +178,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         setFieldValue(data)
                         createDialogTurn(false)
                     } else if (snapshot.get("uid1move") == "gamelost" && !move) {
-                        move=true
+                        decksize= snapshot.get("uid1decksize").toString()
+                        move = true
 
                         var data =
                             hashMapOf(
@@ -183,7 +189,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogGame(false)
 
                     } else if ((snapshot.get("uid1move") == "setlost") && !move) {
-                        move=true
+                        decksize= snapshot.get("uid1decksize").toString()
+                        move = true
 
                         var data =
                             hashMapOf(
@@ -193,7 +200,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogSet(false)
 
                     } else if ((snapshot.get("uid1move") == "turnlostswitch") && !move) {
-                        move=true
+                        move = true
+                        decksize= snapshot.get("uid1decksize").toString()
 
                         var data =
                             hashMapOf(
@@ -205,8 +213,9 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                     }
 
                 } else if (uid == "uid2") {
+                    decksize= snapshot.get("uid1decksize").toString()
                     if (snapshot.get("uid2move") == "gamewin" && !move) {
-                        move=true
+                        move = true
 
                         var data =
                             hashMapOf(
@@ -216,8 +225,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogGame(true)
 
                     } else if ((snapshot.get("uid2move") == "setwin") && !move) {
-                        move=true
-
+                        move = true
+                        decksize= snapshot.get("uid2decksize").toString()
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
@@ -226,8 +235,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogSet(true)
 
                     } else if ((snapshot.get("uid2move") == "turnwinswitch") && !move) {
-                        move=true
-
+                        move = true
+                        decksize= snapshot.get("uid2decksize").toString()
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
@@ -236,7 +245,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogTurnSwitch(true)
 
                     } else if ((snapshot.get("uid2move") == "turnwin") && !move) {
-                        move=true
+                        move = true
+                        decksize= snapshot.get("uid2decksize").toString()
 
                         var data =
                             hashMapOf(
@@ -246,7 +256,9 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogTurn(true)
 
                     } else if ((snapshot.get("uid2move") == "turnlost") && !move) {
-                        move=true
+                        decksize= snapshot.get("uid2decksize").toString()
+
+                        move = true
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
@@ -255,7 +267,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogTurn(false)
 
                     } else if (snapshot.get("uid2move") == "gamelost" && !move) {
-                        move=true
+                        move = true
 
                         var data =
                             hashMapOf(
@@ -265,7 +277,9 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogGame(false)
 
                     } else if ((snapshot.get("uid2move") == "setlost") && !move) {
-                        move=true
+                        decksize= snapshot.get("uid2decksize").toString()
+
+                        move = true
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
@@ -274,7 +288,8 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                         createDialogSet(false)
 
                     } else if ((snapshot.get("uid2move") == "turnlostswitch") && !move) {
-                        move=true
+                        decksize= snapshot.get("uid2decksize").toString()
+                        move = true
                         var data =
                             hashMapOf(
                                 "uid2move" to ""
@@ -294,7 +309,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
     private fun setTurn(_turn: Boolean) {
         if (_turn) {
             turn = 1
-            if(!firstime) {
+            if (!firstime) {
                 binding.turntext.text = "YOUR TURN"
                 binding.turntext.visibility = View.VISIBLE
                 binding.greater.visibility = View.VISIBLE
@@ -302,7 +317,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             }
         } else {
             turn = 2
-            if(!firstime) {
+            if (!firstime) {
                 binding.turntext.text = "OPPONENT TURN"
                 binding.turntext.visibility = View.VISIBLE
                 binding.greater.visibility = View.INVISIBLE
@@ -326,20 +341,40 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             valueSelected = "value1"
             println("valsel" + valueSelected)
             viewContainer1.setBackgroundColor(Color.parseColor("#F15A22"))
+            binding.attributevalue1.setTextColor(Color.parseColor("#000000"))
+            binding.imageView1.setImageResource(R.drawable.arrowblack)
             viewContainer3.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue3.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView3.setImageResource(R.drawable.arrow)
             viewContainer4.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue4.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView4.setImageResource(R.drawable.arrow)
             viewContainer5.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue5.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView5.setImageResource(R.drawable.arrow)
             viewContainer2.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue2.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView2.setImageResource(R.drawable.arrow)
         }
 
         viewContainer2.setOnClickListener {
             valueSelected = "value2"
             println("valsel" + valueSelected)
             viewContainer2.setBackgroundColor(Color.parseColor("#F15A22"))
+            binding.attributevalue2.setBackgroundColor(Color.parseColor("#000000"))
+            binding.imageView2.setImageResource(R.drawable.arrowblack)
             viewContainer3.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue3.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView3.setImageResource(R.drawable.arrow)
             viewContainer4.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue4.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView4.setImageResource(R.drawable.arrow)
             viewContainer5.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue5.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView5.setImageResource(R.drawable.arrow)
             viewContainer1.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue1.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView1.setImageResource(R.drawable.arrow)
 
         }
         viewContainer3.setOnClickListener {
@@ -347,10 +382,20 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             println("valsel" + valueSelected)
 
             viewContainer3.setBackgroundColor(Color.parseColor("#F15A22"))
+            binding.attributevalue3.setTextColor(Color.parseColor("#000000"))
+            binding.imageView3.setImageResource(R.drawable.arrowblack)
             viewContainer1.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue1.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView1.setImageResource(R.drawable.arrow)
             viewContainer4.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue4.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView4.setImageResource(R.drawable.arrow)
             viewContainer5.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue5.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView5.setImageResource(R.drawable.arrow)
             viewContainer2.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue2.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView2.setImageResource(R.drawable.arrow)
 
         }
         viewContainer4.setOnClickListener {
@@ -358,20 +403,40 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             println("valsel" + valueSelected)
 
             viewContainer4.setBackgroundColor(Color.parseColor("#F15A22"))
+            binding.attributevalue4.setTextColor(Color.parseColor("#000000"))
+            binding.imageView4.setImageResource(R.drawable.arrowblack)
             viewContainer3.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue3.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView3.setImageResource(R.drawable.arrow)
             viewContainer1.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue1.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView1.setImageResource(R.drawable.arrow)
             viewContainer5.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue5.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView5.setImageResource(R.drawable.arrow)
             viewContainer2.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue2.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView2.setImageResource(R.drawable.arrow)
 
         }
         viewContainer5.setOnClickListener {
             valueSelected = "value5"
             println("valsel" + valueSelected)
             viewContainer5.setBackgroundColor(Color.parseColor("#F15A22"))
+            binding.attributevalue5.setTextColor(Color.parseColor("#000000"))
+            binding.imageView5.setImageResource(R.drawable.arrowblack)
             viewContainer3.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue3.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView3.setImageResource(R.drawable.arrow)
             viewContainer4.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue4.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView4.setImageResource(R.drawable.arrow)
             viewContainer1.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue1.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView1.setImageResource(R.drawable.arrow)
             viewContainer2.setBackgroundResource(android.R.color.transparent)
+            binding.attributevalue2.setTextColor(Color.parseColor("#F15A22"))
+            binding.imageView2.setImageResource(R.drawable.arrow)
         }
 
     }
@@ -454,7 +519,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         //dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         Handler(Looper.getMainLooper()).postDelayed({
             dialog.dismiss()
-            move=false
+            move = false
             setPlayingCard()
         }, 4000)
 
@@ -475,6 +540,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             charItem!!.remove(card)
             Handler(Looper.getMainLooper()).postDelayed({
                 setPlayingCard()
+
             }, 1000)
 
         }
@@ -483,7 +549,9 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         //dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         Handler(Looper.getMainLooper()).postDelayed({
             dialog.dismiss()
-            move=false
+            move = false
+            setAnimationDeck(decksize)
+
         }, 4000)
 
 
@@ -510,7 +578,9 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         //dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         Handler(Looper.getMainLooper()).postDelayed({
             dialog.dismiss()
-            move=false
+            move = false
+            setAnimationDeck(decksize)
+
         }, 4000)
 
 
@@ -550,6 +620,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
 
 
     }
+
     private fun setFieldValue(hashMap: HashMap<String, String>) {
 
         val docRef = db.collection("GameRoom").document(deckcard.getGameRoom())
@@ -562,39 +633,43 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
 
     }
 
-    private fun setAnimation(){
+    private fun setAnimation() {
         binding.watchProgress.playAnimation()
         binding.watchProgress.addAnimatorUpdateListener { valueAnimator ->
             // Set animation progress
             progres = (valueAnimator.animatedValue as Float * 100).toInt()
-            if(progres==99 && turn==1){
+            if (progres == 99 && turn == 1) {
                 binding.watchProgress.cancelAnimation()
-                binding.watchProgress.visibility=View.GONE
-                binding.waitingtext3.text="YOUR TURN"
+                binding.watchProgress.visibility = View.GONE
+                binding.waitingtext3.text = "YOUR TURN"
 
-                binding.waitingtext3.visibility=View.VISIBLE
+                binding.waitingtext3.visibility = View.VISIBLE
                 Handler(Looper.getMainLooper()).postDelayed({
-                    binding.waitingtext3.visibility=View.INVISIBLE
+                    binding.waitingtext3.visibility = View.INVISIBLE
                     binding.turntext.text = "YOUR TURN"
                     binding.turntext.visibility = View.VISIBLE
                     binding.greater.visibility = View.VISIBLE
                     binding.lower.visibility = View.VISIBLE
                     binding.cardLayout.visibility = View.VISIBLE
-                    firstime=false
+                    firstime = false
+                    setAnimationDeck(deckcard.getDeckSize().toString())
+
                 }, 2000)
-            }else if(progres==99 && turn==2) {
+            } else if (progres == 99 && turn == 2) {
                 binding.watchProgress.cancelAnimation()
-                binding.watchProgress.visibility=View.INVISIBLE
-                binding.waitingtext3.text="OPPONENT TURN"
-                binding.waitingtext3.visibility=View.VISIBLE
+                binding.watchProgress.visibility = View.INVISIBLE
+                binding.waitingtext3.text = "OPPONENT TURN"
+                binding.waitingtext3.visibility = View.VISIBLE
                 Handler(Looper.getMainLooper()).postDelayed({
-                    binding.waitingtext3.visibility=View.GONE
+                    binding.waitingtext3.visibility = View.GONE
                     binding.turntext.text = "OPPONENT TURN"
                     binding.turntext.visibility = View.VISIBLE
                     binding.greater.visibility = View.INVISIBLE
                     binding.lower.visibility = View.INVISIBLE
                     binding.cardLayout.visibility = View.VISIBLE
-                    firstime=false
+                    firstime = false
+                    setAnimationDeck("")
+
                 }, 2000)
 
             }
@@ -602,8 +677,23 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         }
     }
 
+    private fun setAnimationDeck(cardNumber : String) {
+        binding.deckShuffle.setAnimation("card_shuffle.json")
+        binding.deckShuffle.loop(false)
+        binding.deckShuffle.speed = 1f
+        binding.deckShuffle.playAnimation()
+        binding.deckShuffle.addAnimatorUpdateListener { valueAnimator ->
+            // Set animation progress
+            var progres = (valueAnimator.animatedValue as Float * 100).toInt()
+            println(progres)
+            if (progres == 98 ) {
+                binding.deckShuffle.pauseAnimation()
+                binding.decksize.text=cardNumber
 
+            }
+        }
 
+    }
 }
 
 

@@ -9,7 +9,7 @@
         motion:duration="1000">
        <KeyFrameSet>
            <KeyPosition
-               motion:motionTarget="@+id/chip"
+               motion:motionTarget="@+id/profile_button"
                motion:framePosition="50"
                motion:percentX="10"
                motion:percentY="10" />
@@ -20,12 +20,12 @@
                motion:percentX="50"
                motion:percentY="50" />
        </KeyFrameSet>
-        <OnClick motion:targetId="@+id/chip" />
+        <OnClick motion:targetId="@+id/profile_button" />
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
         <Constraint
-            android:id="@+id/chip"
+            android:id="@+id/profile_button"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
 
     <ConstraintSet android:id="@+id/end">
         <Constraint
-            android:id="@+id/chip"
+            android:id="@+id/profile_button"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

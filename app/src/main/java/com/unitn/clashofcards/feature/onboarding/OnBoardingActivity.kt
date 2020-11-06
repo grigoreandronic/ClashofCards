@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -22,6 +23,7 @@ import com.unitn.clashofcards.R
 import com.unitn.clashofcards.marketplace.CheckoutActivity
 import com.unitn.clashofcards.matcher.DeckSelection
 import com.unitn.clashofcards.model.GameRoom
+import kotlinx.android.synthetic.main.activity_turnwin.*
 import kotlinx.android.synthetic.main.menu_bar.*
 
 class OnBoardingActivity : AppCompatActivity() {
@@ -33,6 +35,7 @@ class OnBoardingActivity : AppCompatActivity() {
         val deck_button = findViewById<MaterialButton>(R.id.DeckBtn)
         val marketplace_button = findViewById<MaterialButton>(R.id.MarketplaceBtn)
         val play_btn = findViewById<MaterialButton>(R.id.PlayBtn)
+        val profile_button = findViewById<Chip>(R.id.profile_button)
         deck_button.setOnClickListener {
             val intent = Intent(this, DeckActivity::class.java)
             startActivity(intent)
@@ -42,6 +45,15 @@ class OnBoardingActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        profile_button.setOnClickListener {
+            var dialog = Dialog(this)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(true)
+            dialog.setContentView(R.layout.fragment_profile)
+
+            dialog.show()
+
+        }
 
         play_btn.setOnClickListener {
             val intent = Intent(this, DeckSelection::class.java)
