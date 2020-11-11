@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.unitn.clashofcards.R
@@ -48,7 +49,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
     var card: Card = Card()
     var turnplay = ""
     var valueSelected: String = ""
-
+    var useruid=""
     var idRoom: String = ""
     var uid: String = ""
     var uidopponent: String = ""
@@ -122,13 +123,14 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
             if (snapshot != null && snapshot.exists()) {
 
                 if (snapshot.get("turn") == uid) {
-
                     setTurn(true)
 
                 } else if (snapshot.get("turn") == uidopponent) {
                     setTurn(false)
                 }
                 if (uid == "uid1") {
+                    useruid=snapshot.get("uid1").toString()
+
                     decksize= snapshot.get("uid1decksize").toString()
                     if (snapshot.get("uid1move") == "gamewin" && !move) {
                         move = true
@@ -213,6 +215,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
                     }
 
                 } else if (uid == "uid2") {
+                    useruid=snapshot.get("uid1").toString()
                     decksize= snapshot.get("uid1decksize").toString()
                     if (snapshot.get("uid2move") == "gamewin" && !move) {
                         move = true
@@ -592,11 +595,23 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.fragment_game_result)
+        var score=""
         if (win) {
             dialog.gamewinner.text = "YOU WIN THE GAME"
-
+            val docRef = db.collection("Users").document(useruid)
+            val data = firestore.runTransaction {
+                val snapshot = it.get(docRef)
+                var wins = snapshot.getString("wins")!!.toInt() +1
+                it.update(docRef, "wins", wins)
+            }
         } else {
             dialog.gamewinner.text = "YOU LOST THE GAME"
+            val docRef = db.collection("Users").document(useruid)
+            val data = firestore.runTransaction {
+                val snapshot = it.get(docRef)
+                var defeats = snapshot.getString("defeats")!!.toInt() +1
+                it.update(docRef, "defeats", defeats)
+            }
         }
         dialog.show()
         //dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -685,7 +700,6 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         binding.deckShuffle.addAnimatorUpdateListener { valueAnimator ->
             // Set animation progress
             var progres = (valueAnimator.animatedValue as Float * 100).toInt()
-            println(progres)
             if (progres == 98 ) {
                 binding.deckShuffle.pauseAnimation()
                 binding.decksize.text=cardNumber
