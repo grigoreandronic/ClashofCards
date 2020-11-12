@@ -14,5 +14,8 @@ data class User(
   var email: String? = "",
   var password: String?= "",
   var birthDate: String= "",
-  var Decks: ArrayList<DocumentReference> ? = null
+  var Decks: ArrayList<DocumentReference> ? = null,
+  var wins: String?= "0",
+  var defeats : String?= "0",
+  var tier : String?= "Iron"
 )

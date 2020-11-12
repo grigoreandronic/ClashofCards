@@ -599,6 +599,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         if (win) {
             dialog.gamewinner.text = "YOU WIN THE GAME"
             val docRef = db.collection("Users").document(useruid)
+            println("1---"+useruid)
             val data = firestore.runTransaction {
                 val snapshot = it.get(docRef)
                 var wins = snapshot.getString("wins")!!.toInt() +1
@@ -607,6 +608,7 @@ class GameActivityFunction : AppCompatActivity(), CoroutineScope {
         } else {
             dialog.gamewinner.text = "YOU LOST THE GAME"
             val docRef = db.collection("Users").document(useruid)
+            println("2---"+useruid)
             val data = firestore.runTransaction {
                 val snapshot = it.get(docRef)
                 var defeats = snapshot.getString("defeats")!!.toInt() +1
